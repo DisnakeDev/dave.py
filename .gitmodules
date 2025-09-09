@@ -1,7 +1,6 @@
 [submodule "libdave"]
 	path = libdave
 	url = https://github.com/discord/libdave.git
-[submodule "pybind11"]
-	path = pybind11
-	url = https://github.com/pybind/pybind11
-	branch = stable
+[submodule "nanobind"]
+	path = nanobind
+	url = https://github.com/wjakob/nanobind

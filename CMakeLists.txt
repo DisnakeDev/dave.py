@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
 set(LIBDAVE_SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libdave/cpp)
 
@@ -9,10 +9,10 @@ set(VCPKG_MANIFEST_DIR ${LIBDAVE_SRC_PATH}/vcpkg-alts/boringssl CACHE STRING "")
 
 project(example LANGUAGES CXX)
 
-set(PYBIND11_FINDPYTHON ON)
-add_subdirectory(pybind11)
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
+add_subdirectory(nanobind)
 
-pybind11_add_module(example MODULE example.cpp)
+nanobind_add_module(example example.cpp)
 
 
 add_subdirectory(${LIBDAVE_SRC_PATH})
