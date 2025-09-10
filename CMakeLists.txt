@@ -14,7 +14,13 @@ find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 add_subdirectory(nanobind)
 
 nanobind_add_module(example example.cpp)
-
+nanobind_add_stub(
+    example_stub
+    MODULE example
+    OUTPUT example.pyi
+    PYTHON_PATH $<TARGET_FILE_DIR:example>
+    DEPENDS example
+)
 
 add_subdirectory(${LIBDAVE_SRC_PATH})
 # find_package(libdave CONFIG REQUIRED)
