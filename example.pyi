@@ -1,0 +1,64 @@
+from collections.abc import Callable, Sequence, Set
+import enum
+
+
+kInitTransitionId: int = 0
+kDisabledVersion: int = 0
+
+
+class MediaType(enum.IntEnum):
+    audio = 0
+    video = 1
+
+
+class Codec(enum.IntEnum):
+    unknown = 0
+    opus = 1
+    vp8 = 2
+    vp9 = 3
+    h264 = 4
+    h265 = 5
+    av1 = 6
+
+
+def get_max_supported_protocol_version() -> int: ...
+
+
+class FailedT:
+    pass
+
+
+class IgnoredT:
+    pass
+
+
+class SignaturePrivateKey:
+    pass
+
+
+class Session:
+    def __init__(self, context: str, auth_session_id: str, callback: Callable[[str, str], None]) -> None: ...
+
+    def init(self, version: int, group_id: int, self_user_id: str, transient_key: SignaturePrivateKey) -> None: ...
+
+    def reset(self) -> None: ...
+
+    def set_protocol_version(self, version: int) -> None: ...
+
+    def get_protocol_version(self) -> int: ...
+
+    def get_last_epoch_authenticator(self) -> list[int]: ...
+
+    def set_external_sender(self, external_sender_package: Sequence[int]) -> None: ...
+
+    def process_proposals(self, proposals: Sequence[int], recognized_user_ids: Set[str]) -> list[int] | None: ...
+
+    def process_commit(self, commit: Sequence[int]) -> FailedT | IgnoredT | dict[int, list[int]]: ...
+
+    def process_welcome(self, welcome: Sequence[int], recognized_user_ids: Set[str]) -> dict[int, list[int]] | None: ...
+
+    def get_marshalled_key_package(self) -> list[int]: ...
+
+    def get_key_ratchet(self, user_id: str) -> "discord::dave::MlsKeyRatchet": ...
+
+    def get_pairwise_fingerprint(self, version: int, user_id: str, callback: Callable[[Sequence[int]], None]) -> None: ...
