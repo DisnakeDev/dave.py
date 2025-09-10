@@ -2,8 +2,14 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/function.h>
-// #include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/vector.h>
+#include <nanobind/stl/set.h>
+#include <nanobind/stl/map.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/unique_ptr.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/stl/optional.h>
+#include <nanobind/stl/variant.h>
 
 #include <mls/crypto.h>
 
@@ -36,9 +42,13 @@ NB_MODULE(example, m) {
         .value("h265", discord::dave::Codec::H265, "")
         .value("av1", discord::dave::Codec::AV1, "");
 
-    m.def("MaxSupportedProtocolVersion", discord::dave::MaxSupportedProtocolVersion);
+    m.def("get_max_supported_protocol_version", discord::dave::MaxSupportedProtocolVersion);
 
-    nb::class_<discord::dave::mls::Session>(m, "Session", "")
+    nb::class_<discord::dave::failed_t>(m, "FailedT");
+    nb::class_<discord::dave::ignored_t>(m, "IgnoredT");
+    nb::class_<::mlspp::SignaturePrivateKey>(m, "SignaturePrivateKey");
+
+    nb::class_<discord::dave::mls::Session>(m, "Session")
         .def(nb::init<discord::dave::mls::KeyPairContextType, std::string, discord::dave::mls::Session::MLSFailureCallback>(),
             nb::arg("context"), nb::arg("auth_session_id"), nb::arg("callback"))
         .def("init",
@@ -54,11 +64,11 @@ NB_MODULE(example, m) {
         .def("set_external_sender",
             &discord::dave::mls::Session::SetExternalSender, nb::arg("external_sender_package"))
         .def("process_proposals",
-            &discord::dave::mls::Session::ProcessProposals, nb::arg("proposals"), nb::arg("recognized_user_i_ds"))
+            &discord::dave::mls::Session::ProcessProposals, nb::arg("proposals"), nb::arg("recognized_user_ids"))
         .def("process_commit",
             &discord::dave::mls::Session::ProcessCommit, nb::arg("commit"))
         .def("process_welcome",
-            &discord::dave::mls::Session::ProcessWelcome, nb::arg("welcome"), nb::arg("recognized_user_i_ds"))
+            &discord::dave::mls::Session::ProcessWelcome, nb::arg("welcome"), nb::arg("recognized_user_ids"))
         .def("get_marshalled_key_package",
             &discord::dave::mls::Session::GetMarshalledKeyPackage)
         .def("get_key_ratchet",
