@@ -21,11 +21,40 @@
 
 namespace nb = nanobind;
 
+// used instead of std::variant for hard-/soft-rejecting messages
+enum RejectType : uint8_t {
+    Failed,  // dave::failed_t
+    Ignored  // dave::ignored_t
+};
+
+template <class T>
+std::variant<RejectType, T> unwrapRejection(std::variant<discord::dave::failed_t, discord::dave::ignored_t, T>&& variant) {
+    if (std::holds_alternative<discord::dave::failed_t>(variant))
+        return RejectType::Failed;
+    else if (std::holds_alternative<discord::dave::ignored_t>(variant))
+        return RejectType::Ignored;
+    return std::get<T>(std::move(variant));
+}
+
+class SessionWrapper : public discord::dave::mls::Session {
+public:
+    // inherit constructor
+    using discord::dave::mls::Session::Session;
+
+    std::variant<RejectType, discord::dave::RosterMap> ProcessCommit(std::vector<uint8_t> commit) noexcept {
+        return unwrapRejection(discord::dave::mls::Session::ProcessCommit(commit));
+    }
+};
+
 NB_MODULE(example, m) {
     init_logging();
 
     m.attr("kInitTransitionId") = discord::dave::kInitTransitionId;
     m.attr("kDisabledVersion") = discord::dave::kDisabledVersion;
+
+    nb::enum_<RejectType>(m, "RejectType", nb::is_arithmetic(), "")
+        .value("failed", RejectType::Failed, "")
+        .value("ignored", RejectType::Ignored, "");
 
     nb::enum_<discord::dave::MediaType>(m, "MediaType", nb::is_arithmetic(), "")
         .value("audio", discord::dave::MediaType::Audio, "")
@@ -43,35 +72,33 @@ NB_MODULE(example, m) {
 
     m.def("get_max_supported_protocol_version", discord::dave::MaxSupportedProtocolVersion);
 
-    nb::class_<discord::dave::failed_t>(m, "FailedT");
-    nb::class_<discord::dave::ignored_t>(m, "IgnoredT");
     nb::class_<::mlspp::SignaturePrivateKey>(m, "SignaturePrivateKey");
 
-    nb::class_<discord::dave::mls::Session>(m, "Session")
+    nb::class_<SessionWrapper>(m, "Session")
         .def(nb::init<discord::dave::mls::KeyPairContextType, std::string, discord::dave::mls::Session::MLSFailureCallback>(),
             nb::arg("context"), nb::arg("auth_session_id"), nb::arg("callback"))
         .def("init",
-            &discord::dave::mls::Session::Init, nb::arg("version"), nb::arg("group_id"), nb::arg("self_user_id"), nb::arg("transient_key"))
+            &SessionWrapper::Init, nb::arg("version"), nb::arg("group_id"), nb::arg("self_user_id"), nb::arg("transient_key"))
         .def("reset",
-            &discord::dave::mls::Session::Reset)
+            &SessionWrapper::Reset)
         .def("set_protocol_version",
-            &discord::dave::mls::Session::SetProtocolVersion, nb::arg("version"))
+            &SessionWrapper::SetProtocolVersion, nb::arg("version"))
         .def("get_protocol_version",
-            &discord::dave::mls::Session::GetProtocolVersion)
+            &SessionWrapper::GetProtocolVersion)
         .def("get_last_epoch_authenticator",
-            &discord::dave::mls::Session::GetLastEpochAuthenticator)
+            &SessionWrapper::GetLastEpochAuthenticator)
         .def("set_external_sender",
-            &discord::dave::mls::Session::SetExternalSender, nb::arg("external_sender_package"))
+            &SessionWrapper::SetExternalSender, nb::arg("external_sender_package"))
         .def("process_proposals",
-            &discord::dave::mls::Session::ProcessProposals, nb::arg("proposals"), nb::arg("recognized_user_ids"))
+            &SessionWrapper::ProcessProposals, nb::arg("proposals"), nb::arg("recognized_user_ids"))
         .def("process_commit",
-            &discord::dave::mls::Session::ProcessCommit, nb::arg("commit"))
+            &SessionWrapper::ProcessCommit, nb::arg("commit"))
         .def("process_welcome",
-            &discord::dave::mls::Session::ProcessWelcome, nb::arg("welcome"), nb::arg("recognized_user_ids"))
+            &SessionWrapper::ProcessWelcome, nb::arg("welcome"), nb::arg("recognized_user_ids"))
         .def("get_marshalled_key_package",
-            &discord::dave::mls::Session::GetMarshalledKeyPackage)
+            &SessionWrapper::GetMarshalledKeyPackage)
         .def("get_key_ratchet",
-            &discord::dave::mls::Session::GetKeyRatchet, nb::arg("user_id"))
+            &SessionWrapper::GetKeyRatchet, nb::arg("user_id"))
         .def("get_pairwise_fingerprint",
-            &discord::dave::mls::Session::GetPairwiseFingerprint, nb::arg("version"), nb::arg("user_id"), nb::arg("callback"));
+            &SessionWrapper::GetPairwiseFingerprint, nb::arg("version"), nb::arg("user_id"), nb::arg("callback"));
 }

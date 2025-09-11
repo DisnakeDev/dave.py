@@ -6,6 +6,11 @@ kInitTransitionId: int = 0
 
 kDisabledVersion: int = 0
 
+class RejectType(enum.IntEnum):
+    failed = 0
+
+    ignored = 1
+
 class MediaType(enum.IntEnum):
     audio = 0
 
@@ -28,12 +33,6 @@ class Codec(enum.IntEnum):
 
 def get_max_supported_protocol_version() -> int: ...
 
-class FailedT:
-    pass
-
-class IgnoredT:
-    pass
-
 class SignaturePrivateKey:
     pass
 
@@ -54,7 +53,7 @@ class Session:
 
     def process_proposals(self, proposals: Sequence[int], recognized_user_ids: Set[str]) -> list[int] | None: ...
 
-    def process_commit(self, commit: Sequence[int]) -> FailedT | IgnoredT | dict[int, list[int]]: ...
+    def process_commit(self, commit: Sequence[int]) -> RejectType | dict[int, list[int]]: ...
 
     def process_welcome(self, welcome: Sequence[int], recognized_user_ids: Set[str]) -> dict[int, list[int]] | None: ...
 
