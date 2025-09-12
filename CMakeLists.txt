@@ -42,18 +42,17 @@ find_package(
 add_subdirectory(nanobind)
 
 nanobind_add_module(_dave_impl STABLE_ABI src/dave.cpp)
-# TODO: fix
-# nanobind_add_stub(
-#     dave_stub
-#     MODULE dave
-#     OUTPUT __init__.pyi
-#     PYTHON_PATH $<TARGET_FILE_DIR:_dave_impl>
-#     DEPENDS _dave_impl
-# )
-# add_custom_command(
-#     TARGET dave_stub
-#     POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/__init__.pyi ${CMAKE_CURRENT_SOURCE_DIR}/src/dave/
-# )
+nanobind_add_stub(
+    dave_stub
+    MODULE _dave_impl
+    OUTPUT __init__.pyi
+    PYTHON_PATH $<TARGET_FILE_DIR:_dave_impl>
+    DEPENDS _dave_impl
+)
+add_custom_command(
+    TARGET dave_stub
+    POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/__init__.pyi ${CMAKE_CURRENT_SOURCE_DIR}/src/dave/
+)
 
 add_subdirectory(${LIBDAVE_SRC_PATH})
 target_link_libraries(_dave_impl PRIVATE libdave)
