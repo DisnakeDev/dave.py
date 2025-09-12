@@ -6,12 +6,13 @@
 1. Clone the repository:
     ```sh
     $ git clone --recurse-submodules https://github.com/DisnakeDev/libdave.py
+    $ cd libdave.py
     ```
 2. Bootstrap vcpkg:
     ```sh
-    $ cd libdave.py/libdave/cpp/vcpkg/.bootstrap-vcpkg.bat  # Windows
+    $ libdave/cpp/vcpkg/.bootstrap-vcpkg.bat  # Windows
     # or
-    $ cd libdave.py/libdave/cpp/vcpkg/.bootstrap-vcpkg.sh   # mac OS/Linux
+    $ ./libdave/cpp/vcpkg/.bootstrap-vcpkg.sh  # mac OS/Linux
     ```
 3. Install Python dependencies:
     ```sh
