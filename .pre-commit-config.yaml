@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: MIT
+
+## Pre-commit setup
+
+# thanks disnake
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.15.0
+    hooks:
+      - id: pretty-format-yaml
+        args: [--autofix, --indent, '2', --offset, '2', '--preserve-quotes']
+
+  - repo: local
+    hooks:
+      - id: no-symlinks
+        name: no symlinks
+        description: "Check for symlinks"
+        entry: "symlinks may not be committed due to platform support"
+        language: fail
+        types: [symlink]
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.12.12
+    hooks:
+      - id: ruff-format
+      - id: ruff-check
+        args: [--fix, --fixable=I]

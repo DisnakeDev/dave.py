@@ -1,0 +1,205 @@
+# SPDX-License-Identifier: MIT
+
+# thanks disnake
+
+[project]
+name = "libdave.py"
+description = "Python bindings for the libdave package."
+readme = "README.md"
+authors = [
+  { name = "Disnake Development" }
+]
+requires-python = ">=3.8"
+license = { text = "MIT" }
+version = "0.1.0a"
+
+[build-system]
+requires = ["scikit-build-core >=0.4.3", "nanobind >=1.3.2"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+minimum-version = "0.4"
+
+# Setuptools-style build caching in a local directory
+build-dir = "build/{wheel_tag}"
+
+# Build stable ABI wheels for CPython 3.12+
+wheel.py-api = "cp38"
+
+[dependency-groups]
+nox = [
+    "nox==2025.5.1",
+]
+tools = [
+    "pre-commit~=3.0",
+    "slotscheck~=0.16.4",
+    "check-manifest==0.49",
+    "ruff==0.12.12",
+]
+typing = [
+    # this is not pyright itself, but the python wrapper
+    "pyright==1.1.336",
+    # only used for type-checking, version does not matter
+    "pytz",
+]
+build = [
+    "wheel~=0.40.0",
+    "build~=0.10.0",
+    "twine~=5.1.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["libdave.py*"]
+
+[tool.nox]
+script-venv-backend = "uv|virtualenv"
+
+[tool.pdm]
+# Ignore `requires-python` warnings when locking, the latest versions of some
+# dependencies already require >=3.9
+# See also https://pdm-project.org/en/latest/usage/config/#ignore-package-warnings
+ignore_package_warnings = ["*"]
+
+[tool.pdm.scripts]
+lint = { cmd = "nox -Rs lint --", help = "Check all files for linting errors" }
+pyright = { cmd = "nox -Rs pyright --", help = "Run pyright" }
+setup_env = { cmd = "{pdm} install -G:all", help = "Set up the local environment and all dependencies" }
+post_setup_env = { composite = ["python -m ensurepip --default-pip", "pre-commit install --install-hooks"] }
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    # commented out codes are intended to be enabled in future prs
+    "F", # pyflakes
+    "E", "W", # pycodestyle
+    # "D", # pydocstyle
+    "D2",  # pydocstyle, docstring formatting
+    "D4",  # pydocstyle, docstring structure/content
+    "ANN2", # flake8-annotations
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    # "EM", # flake8-errmsg
+    "G", # flake8-logging-format
+    # "RET", # flake8-return
+    # "SIM", # flake8-simplify
+    "TID251", # flake8-tidy-imports, replaces S404
+    "TC",     # flake8-type-checking
+    "RUF",    # ruff specific exceptions
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "T20",    # flake8-print
+    "PGH",    # pygrep-hooks
+    "PLC",    # pylint convention
+    "PLE",    # pylint error
+    # "PLR",    # pylint refactor
+    "PLW",    # pylint warnings
+    "TRY002", "TRY004", "TRY201", # tryceratops
+    "I", # isort
+]
+ignore = [
+    # star imports
+    "F403",
+
+    # pydocstyle
+    "D203", # incompat with D211
+    "D213", # multiline docstring should start on second line, incompatible with D212
+    "D400", # first line ends in period, does not work with `|coro|` etc.
+    "D415", # same thing but punctuation in general
+    "D416", # section name should end with a colon, incompatible with D406
+
+    # unknown if this is actually an issue
+    "RUF006", # might not be an issue/very extreme cases
+
+    # we keep __all__ and __slots__ (roughly) sorted by source, not alphabetically
+    "RUF022",
+    "RUF023",
+
+    # calling subprocess with dynamic arguments is generally fine, the only way to avoid this is ignoring it
+    "S603",
+
+    # partial executable paths (i.e. "git" instead of "/usr/bin/git") are fine
+    "S607",
+
+    # ignore try-except-pass. Bare excepts are caught with E722
+    "S110",
+
+    # provide specific codes on type: ignore
+    "PGH003",
+
+    # typevar names don't match variance (we don't always want this)
+    "PLC0105",
+
+    # import aliases are fixed by ruff
+    "PLC0414",
+
+    # outer loop variables are overwritten by inner assignment target, these are mostly intentional
+    "PLW2901",
+
+    # TODO:
+    # pytest.warns() without a match variable is too broad
+    "PT030",
+
+    # object does not implement hashing
+    "PLW1641",
+
+    # ignore non-to-level imports
+    "PLC0415",
+
+    # ignore imports that could be moved into type-checking blocks
+    # (no real advantage other than possibly avoiding cycles,
+    # but can be dangerous in places where we need to parse signatures)
+    "TC001",
+    "TC002",
+    "TC003",
+
+    "S311",    # insecure RNG usage, we don't use these for security-related things
+    "PLE0237", # pyright seems to catch this already
+
+    "E741",  # ambiguous variable names
+
+    # temporary disables, to fix later
+    "D205",   # blank line required between summary and description
+    "D401",   # first line of docstring should be in imperative mood
+    "D417",   # missing argument description in docstring
+    "B904",   # within an except clause raise from error or from none
+    "B026",   # backwards star-arg unpacking
+    "E501",   # line too long
+    "E731",   # assigning lambdas to variables
+    "T201",   # print statements
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"subprocess".msg = "Consider possible security implications associated with the subprocess module." # replaces S404
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    # this is immutable, except for storing locks, which are fine to share across contexts
+    "disnake.webhook.async_.AsyncWebhookAdapter",
+]
+
+[tool.ruff.lint.flake8-annotations]
+ignore-fully-untyped = true
+
+[tool.pyright]
+typeCheckingMode = "strict"
+include = [
+    "libdave.py",
+    "*.py",
+]
