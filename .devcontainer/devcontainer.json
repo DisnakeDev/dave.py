@@ -20,7 +20,8 @@
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
                 "Gruntfuggly.todo-tree",
-                "ms-vscode.cmake-tools"
+                "ms-vscode.cmake-tools",
+                "tamasfe.even-better-toml"
             ]
         }
     },
