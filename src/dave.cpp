@@ -19,7 +19,8 @@
 #include <dave/mls/session.h>
 #include <dave/utils/array_view.h>
 
-#include "logging.h"
+#include "logging.hpp"
+#include "utils.hpp"
 
 namespace nb = nanobind;
 
@@ -43,8 +44,39 @@ public:
     // inherit constructor
     using discord::dave::mls::Session::Session;
 
-    std::variant<RejectType, discord::dave::RosterMap> ProcessCommit(std::vector<uint8_t> commit) noexcept {
-        return unwrapRejection(discord::dave::mls::Session::ProcessCommit(commit));
+    void SetExternalSender(nb::bytes marshalledExternalSender) {
+        return discord::dave::mls::Session::SetExternalSender(nb::bytes_to_vector(marshalledExternalSender));
+    }
+
+    std::optional<nb::bytes> ProcessProposals(
+        nb::bytes proposals,
+        std::set<std::string> const& recognizedUserIDs
+    ) {
+        auto res = discord::dave::mls::Session::ProcessProposals(
+            nb::bytes_to_vector(proposals),
+            recognizedUserIDs
+        );
+        if (res)
+            return nb::vector_to_bytes(*res);
+        return std::nullopt;
+    }
+
+    std::variant<RejectType, discord::dave::RosterMap> ProcessCommit(nb::bytes commit) {
+        return unwrapRejection(discord::dave::mls::Session::ProcessCommit(nb::bytes_to_vector(commit)));
+    }
+
+    std::optional<discord::dave::RosterMap> ProcessWelcome(
+        nb::bytes welcome,
+        std::set<std::string> const& recognizedUserIDs
+    ) {
+        return discord::dave::mls::Session::ProcessWelcome(
+            nb::bytes_to_vector(welcome),
+            recognizedUserIDs
+        );
+    }
+
+    nb::bytes GetMarshalledKeyPackage() {
+        return nb::vector_to_bytes(discord::dave::mls::Session::GetMarshalledKeyPackage());
     }
 };
 
