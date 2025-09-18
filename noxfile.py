@@ -68,7 +68,7 @@ def lint(session: nox.Session) -> None:
     """Check all files for linting errors"""
     install_deps(session, project=False, groups=["tools"])
 
-    session.run("pre-commit", "run", "--all-files", *session.posargs)
+    session.run("prek", "run", "--all-files", *session.posargs)
 
 
 @nox.session

@@ -19,7 +19,7 @@ nox = [
   "nox==2025.5.1",
 ]
 tools = [
-  "pre-commit~=3.0",
+  "prek~=0.2.1",
   "ruff==0.13.0",
 ]
 typing = [
