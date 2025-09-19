@@ -10,15 +10,16 @@ license = { text = "MIT" }
 authors = [{ name = "Disnake Development" }]
 
 [dependency-groups]
-build = [
-  "build~=0.10.0",
-  "twine~=5.1.1",
-  "wheel~=0.40.0",
+dev = [
+  { include-group = "nox" },
+  { include-group = "tools" },
+  { include-group = "typing" },
 ]
 nox = [
   "nox==2025.5.1",
 ]
 tools = [
+  "poethepoet>=0.30.0",
   "prek~=0.2.1",
   "ruff==0.13.0",
 ]
@@ -28,23 +29,12 @@ typing = [
 ]
 
 [build-system]
-requires = ["nanobind==2.9.2", "scikit-build-core>=0.4.3"]
+requires = ["nanobind>=2.9.2", "scikit-build-core>=0.4.3"]
 build-backend = "scikit_build_core.build"
 
-[tool.pdm]
-# Ignore `requires-python` warnings when locking, the latest versions of some
-# dependencies already require >=3.9
-# See also https://pdm-project.org/en/latest/usage/config/#ignore-package-warnings
-ignore_package_warnings = ["*"]
-
-[tool.pdm.scripts]
+[tool.poe.tasks]
 lint = { cmd = "nox -Rs lint --", help = "Check all files for linting errors" }
 pyright = { cmd = "nox -Rs pyright --", help = "Run pyright" }
-setup_env = { cmd = "{pdm} install -G:all", help = "Set up the local environment and all dependencies" }
-post_setup_env = { composite = [
-  "python -m ensurepip --default-pip",
-  "pre-commit install --install-hooks",
-] }
 
 [tool.pyright]
 typeCheckingMode = "strict"
@@ -55,6 +45,7 @@ include = [
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["src/dave/__init__.pyi"]
 
 [tool.ruff.lint]
 future-annotations = true
@@ -116,10 +107,20 @@ convention = "numpy"
 keep-runtime-typing = true
 
 [tool.scikit-build]
-minimum-version = "0.4"
+minimum-version = "build-system.requires"
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
 # Build stable ABI wheels for CPython 3.12+
 wheel.py-api = "cp312"
 wheel.packages = ["src/dave"]
 cmake.build-type = "Debug"
+
+[tool.uv]
+cache-keys = [
+  { file = "pyproject.toml" },
+  { file = "src/**/*.{h,c,hpp,cpp}" },
+  { file = "CMakeLists.txt" },
+]
+
+[tool.uv.config-settings]
+"editable.rebuild" = "true"

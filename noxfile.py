@@ -36,25 +36,22 @@ def install_deps(
         raise TypeError(msg)
 
     command: List[str] = [
-        "pdm",
+        "uv",
         "sync",
-        "--fail-fast",
-        "--clean-unselected",
+        "--no-default-groups",
     ]
 
-    # see https://pdm-project.org/latest/usage/advanced/#use-nox-as-the-runner
-    env: Dict[str, Any] = {
-        "PDM_IGNORE_SAVED_PYTHON": "1",
-    }
+    env: Dict[str, Any] = {}
+    if session.venv_backend != "none":
+        command.append(f"--python={session.virtualenv.location}")
+        env["UV_PROJECT_ENVIRONMENT"] = str(session.virtualenv.location)
 
-    command.extend([f"-G={g}" for g in (*extras, *groups)])
-
-    if not groups:
-        # if no dev groups requested, make sure we don't install any
-        command.append("--prod")
-
+    if extras:
+        command.extend([f"--extra={e}" for e in extras])
+    if groups:
+        command.extend([f"--group={g}" for g in groups])
     if not project:
-        command.append("--no-self")
+        command.append("--no-install-project")
 
     session.run_install(
         *command,
@@ -74,25 +71,14 @@ def lint(session: nox.Session) -> None:
 @nox.session
 def pyright(session: nox.Session) -> None:
     """Run pyright."""
-    install_deps(
-        session,
-        project=True,
-        extras=["speed", "voice"],
-        groups=[
-            "test",  # tests/
-            "nox",  # noxfile.py
-            "docs",  # docs/
-            "codemod",  # scripts/
-            "typing",  # pyright
-        ],
-    )
+    install_deps(session, project=True, groups=["nox", "typing"])
     env = {
         "PYRIGHT_PYTHON_IGNORE_WARNINGS": "1",
     }
     try:
         session.run("python", "-m", "pyright", *session.posargs, env=env)
     except KeyboardInterrupt:
-        pass
+        session.error("Interrupted!")
 
 
 if __name__ == "__main__":
