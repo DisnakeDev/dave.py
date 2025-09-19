@@ -1,6 +1,6 @@
-#!/usr/bin/env -S pdm run
+#!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.10"
+# requires-python = ">=3.8"
 # dependencies = [
 #     "nox==2025.5.1",
 # ]
