@@ -1,1 +1,1 @@
-from dave._dave_impl import *  # noqa: F403
+from dave._dave_impl import *  # pyright: ignore[reportMissingImports]  # noqa: F403

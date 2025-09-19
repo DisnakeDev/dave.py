@@ -24,7 +24,6 @@ tools = [
   "ruff==0.13.0",
 ]
 typing = [
-  # this is not pyright itself, but the python wrapper
   "pyright==1.1.405",
 ]
 
@@ -42,66 +41,35 @@ include = [
   "dave",
   "*.py",
 ]
+exclude = [
+  ".venv/",
+  "libdave/",
+  "nanobind/",
+]
 
 [tool.ruff]
 line-length = 100
-extend-exclude = ["src/dave/__init__.pyi"]
+extend-exclude = [
+  "src/dave/__init__.pyi",
+  "libdave/",
+  "nanobind/",
+]
 
 [tool.ruff.lint]
 future-annotations = true
 select = ["ALL"]
 unfixable = ["ERA001"]
 ignore = [
-  # #flake8-commas
+  # flake8-commas
   "COM812",  # mostly managed by the formatter
-  # #flake8-simplify
-  "SIM105",
-  "SIM108",  # too noisy for us
-  # #flake8-tidy-imports
-  "TID252",  # we still use relative imports
-  # #flake8-todos
+  # flake8-todos
   "TD",  # similar to flake8-fixme, though they may conflict
-  # #pydocstyle
-  "D1",
-  "D205",
-  "D301",
-  "D400",
-  "D401",
-  # #Ruff-specific rules
-  "RUF006",  # not actually sure this is a bug at all...
-  "RUF022",  # TODO: consider enabling
-  "RUF023",  # TODO: consider enabling
-  # #tryceratops
-  "TRY003",  # as of 0.13.0 still has some false positives
-  "TRY301",  # TODO: enable
-  "TRY300",  # TODO: enable
+  # pydocstyle
+  "D",
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"noxfile.py" = ["EXE003"]
-
-[tool.ruff.lint.flake8-annotations]
-ignore-fully-untyped = true
-
-[tool.ruff.lint.flake8-bugbear]
-extend-immutable-calls = [
-  "disnake.ext.commands.inject",
-  "disnake.ext.commands.Param",
-  "disnake.webhook.async_.AsyncWebhookAdapter",
-]
-
-[tool.ruff.lint.flake8-tidy-imports.banned-api]
-"subprocess".msg = "Consider possible security implications associated with the subprocess module."  # replaces S404
-
-[tool.ruff.lint.flake8-pytest-style]
-fixture-parentheses = false
-mark-parentheses = false
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
-
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true

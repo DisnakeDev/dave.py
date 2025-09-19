@@ -62,7 +62,7 @@ def install_deps(
 
 @nox.session
 def lint(session: nox.Session) -> None:
-    """Check all files for linting errors"""
+    """Check all files for linting errors."""
     install_deps(session, project=False, groups=["tools"])
 
     session.run("prek", "run", "--all-files", *session.posargs)
@@ -71,7 +71,7 @@ def lint(session: nox.Session) -> None:
 @nox.session
 def pyright(session: nox.Session) -> None:
     """Run pyright."""
-    install_deps(session, project=True, groups=["nox", "typing"])
+    install_deps(session, project=False, groups=["nox", "typing"])
     env = {
         "PYRIGHT_PYTHON_IGNORE_WARNINGS": "1",
     }
