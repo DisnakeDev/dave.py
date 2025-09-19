@@ -8,6 +8,7 @@
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/unique_ptr.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/stl/tuple.h>
 #include <nanobind/stl/optional.h>
 #include <nanobind/stl/variant.h>
 
@@ -123,8 +124,24 @@ public:
 NB_MODULE(_dave_impl, m) {
     init_logging();
 
-    m.attr("kInitTransitionId") = discord::dave::kInitTransitionId;
-    m.attr("kDisabledVersion") = discord::dave::kDisabledVersion;
+    m.doc() = "Python bindings to the C impl of Discord's DAVE protocol";
+
+    // note: every object in the public API should be added to the below
+    m.attr("__all__") = std::make_tuple<std::string>(
+        "k_init_transition_id",
+        "k_disabled_version",
+        "RejectType",
+        "MediaType",
+        "Codec",
+        "get_max_supported_protocol_version",
+        "SignaturePrivateKey",
+        "MlsKeyRatchet",
+        "Session",
+        "Encryptor"
+    );
+
+    m.attr("k_init_transition_id") = discord::dave::kInitTransitionId;
+    m.attr("k_disabled_version") = discord::dave::kDisabledVersion;
 
     nb::enum_<RejectType>(m, "RejectType", nb::is_arithmetic(), "")
         .value("failed", RejectType::Failed, "")
