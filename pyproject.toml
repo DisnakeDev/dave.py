@@ -38,13 +38,8 @@ pyright = { cmd = "nox -Rs pyright --", help = "Run pyright" }
 [tool.pyright]
 typeCheckingMode = "strict"
 include = [
-  "dave",
+  "src/",
   "*.py",
-]
-exclude = [
-  ".venv/",
-  "libdave/",
-  "nanobind/",
 ]
 
 [tool.ruff]
