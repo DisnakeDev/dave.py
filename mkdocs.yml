@@ -1,0 +1,80 @@
+site_name: libdave.py
+site_url: !ENV READTHEDOCS_CANONICAL_URL
+site_description: A Python and GitHub focused Discord bot to make collaborating on Python projects through Discord easier than ever.
+repo_name: DisnakeDev/libdave.py
+repo_url: https://github.com/DisnakeDev/libdave.py
+edit_uri: edit/main/docs/
+copyright: >
+  Copyright &copy; 2025+ DisnakeDev
+theme:
+  name: material
+  palette:
+    # TODO: add our custom theming and darkmode support
+    primary: blue
+    accent: yellow
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tracking
+    - toc.follow
+    - navigation.top
+    - search
+    - search.suggest
+    - search.highlight
+    - content.action.edit
+    - content.action.view
+    - content.code.copy
+    - content.code.annotate
+
+
+plugins:
+  - privacy
+  - git-revision-date-localized
+  - api-autonav:
+      modules: ["src/dave"]
+      module_options: {}
+      nav_section_title: "API Reference"
+      api_root_uri: "reference"
+      nav_item_prefix: "<code class='doc-symbol doc-symbol-nav doc-symbol-module'></code>"
+      exclude_private: false
+      show_full_namespace: false
+      on_implicit_namespace_package: "warn"
+  - mkdocstrings:
+      enable_inventory: true
+      default_handler: python
+      locale: en
+      handlers:
+        python:
+          options:
+            show_source: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - markdown_gfm_admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.betterem
+  - tables
+  - toc:
+      permalink: true
+
+extra_css:
+  - assets/css/extra_admonitions.css
+
+nav:
+  - Home: README.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/DisnakeDev/libdave.py
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/disnake
