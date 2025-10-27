@@ -61,6 +61,13 @@ ignore = [
   "TD",  # similar to flake8-fixme, though they may conflict
   # pydocstyle
   "D",
+  # flake8-errmsg
+  "EM",
+  # tryceratops
+  "TRY003",  # long error messages
+  #
+  "ERA",
+  "PLR2004",
 ]
 
 [tool.ruff.lint.isort]
