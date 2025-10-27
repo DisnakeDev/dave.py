@@ -1,2 +1,2 @@
 # generated automatically by nanobind
-src/dave/__init__.pyi linguist-generated=true
+src/dave/_dave_impl.pyi linguist-generated=true
