@@ -1,4 +1,5 @@
-from collections.abc import Callable, Sequence, Set
+import asyncio
+from collections.abc import Callable, Set
 import enum
 
 
@@ -64,7 +65,7 @@ class Session:
 
     def get_key_ratchet(self, user_id: str) -> MlsKeyRatchet | None: ...
 
-    def get_pairwise_fingerprint(self, version: int, user_id: str, callback: Callable[[Sequence[int]], None]) -> None: ...
+    def get_pairwise_fingerprint(self, version: int, user_id: str) -> asyncio.Future[bytes]: ...
 
 class Encryptor:
     def __init__(self) -> None: ...

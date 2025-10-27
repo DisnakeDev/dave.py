@@ -82,6 +82,26 @@ public:
     nb::bytes GetLastEpochAuthenticator() {
         return nb::vector_to_bytes(discord::dave::mls::Session::GetLastEpochAuthenticator());
     }
+
+    nb::object GetPairwiseFingerprint(
+        uint16_t version, std::string const& userId
+    ) {
+        // TODO: consider future lifetime/refcounts (especially wrt lambda captures)
+        auto fut = nb::module_::import_("asyncio").attr("Future")();
+        discord::dave::mls::Session::GetPairwiseFingerprint(
+            version,
+            userId,
+            [=] (std::vector<uint8_t> const& result) {
+                nb::gil_scoped_acquire acquire;
+                auto call_soon_threadsafe = fut.attr("get_loop")().attr("call_soon_threadsafe");
+                call_soon_threadsafe(
+                    fut.attr("set_result"),
+                    nb::vector_to_bytes(std::move(result))
+                );
+            }
+        );
+        return fut;
+    }
 };
 
 class EncryptorWrapper : public discord::dave::Encryptor {
@@ -183,7 +203,8 @@ NB_MODULE(_dave_impl, m) {
             // explicit signature as this can return a nullptr
             nb::sig("def get_key_ratchet(self, user_id: str) -> MlsKeyRatchet | None"))
         .def("get_pairwise_fingerprint",
-            &SessionWrapper::GetPairwiseFingerprint, nb::arg("version"), nb::arg("user_id"), nb::arg("callback"));
+            &SessionWrapper::GetPairwiseFingerprint, nb::arg("version"), nb::arg("user_id"),
+            nb::sig("def get_pairwise_fingerprint(self, version: int, user_id: str) -> asyncio.Future[bytes]"));
 
     nb::class_<EncryptorWrapper>(m, "Encryptor")
         .def(nb::init<>())
