@@ -38,9 +38,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        submodules: true
+        submodules: recursive
 
     - name: Run bootstrap
+      working-directory: ./libdave
       run: |
         cd ./libdave
         if [ "${{ runner.os }}" = "Windows" ]; then
