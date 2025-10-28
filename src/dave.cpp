@@ -86,7 +86,6 @@ public:
     nb::object GetPairwiseFingerprint(
         uint16_t version, std::string const& userId
     ) {
-        // TODO: consider future lifetime/refcounts (especially wrt lambda captures)
         auto fut = nb::module_::import_("asyncio").attr("Future")();
         discord::dave::mls::Session::GetPairwiseFingerprint(
             version,
