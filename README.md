@@ -21,9 +21,9 @@
 2. Bootstrap vcpkg:
 
    ```sh
-   $ libdave/cpp/vcpkg/scripts/bootstrap.ps1  # Windows
+   $ libdave/cpp/vcpkg/bootstrap-vcpkg.bat  # Windows
    # or
-   $ ./libdave/cpp/vcpkg/scripts/bootstrap.sh  # mac OS/Linux
+   $ ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh  # mac OS/Linux
    ```
 
 3. Install Python dependencies:

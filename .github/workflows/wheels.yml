@@ -48,9 +48,9 @@ jobs:
         working-directory: ./libdave
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-              pwsh -File cpp/vcpkg/scripts/bootstrap.ps1
+              cpp/vcpkg/bootstrap-vcpkg.bat
             else
-              ./cpp/vcpkg/scripts/bootstrap.sh
+              ./cpp/vcpkg/bootstrap-vcpkg.sh
             fi
         shell: bash
 
