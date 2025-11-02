@@ -83,7 +83,13 @@ build-dir = "build/{wheel_tag}"
 # Build stable ABI wheels for CPython 3.12+
 wheel.py-api = "cp312"
 wheel.packages = ["src/dave"]
-cmake.build-type = "Debug"
+cmake.build-type = "Release"
+cmake.define = { BUILD_SHARED_LIBS = "OFF" }
+
+[[tool.scikit-build.overrides]]
+if.platform-system = "^win32"
+if.platform-machine = "AMD64"
+cmake.define = { VCPKG_TARGET_TRIPLET = "x64-windows-static-md" }
 
 [tool.uv]
 cache-keys = [
