@@ -52,3 +52,14 @@ runs:
         else
           ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh
         fi
+
+    # Some versions of clang++ on macOS appear to always insert /usr/local/include at the start of the include paths,
+    # notably disregarding -isystem. This breaks building with boringssl, since the includes end up conflicting.
+    # Thanks Apple.
+    # https://github.com/orgs/Homebrew/discussions/5642
+    # https://stackoverflow.com/a/66377265
+    - name: Unlink openssl headers on macOS
+      shell: bash
+      if: runner.os == 'macOS' && inputs.crypto == 'boringssl'
+      run: |
+        brew unlink openssl@3
