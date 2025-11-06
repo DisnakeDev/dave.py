@@ -116,8 +116,9 @@ environment-pass = ["VCPKG_BINARY_SOURCES", "CI"]
 archs = ["all"]
 
 # - see https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#dependencies
+# - perl-IPC-Cmd is needed to build openssl
 [tool.cibuildwheel.linux]
-before-all = "dnf install -y git curl zip unzip pkgconfig nasm golang"
+before-all = "dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install zip unzip curl pkgconfig nasm go"
