@@ -125,7 +125,14 @@ select = ["*-musllinux_*"]
 before-all = [
   "apk add git curl zip unzip pkgconfig nasm go ninja-build ninja-is-really-ninja",
   # redownload vcpkg binary for musllinux
-  "./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
+  # XXX: regarding CMAKE_POLICY_VERSION_MINIMUM:
+  #   There are no prebuilt vcpkg binaries for arm64 musllinux, so it has to build from source.
+  #   A dependency of vcpkg, CMakeRC, requires cmake 3.x, while the musllinux image used by cibw ships with 4.x.
+  #   The vcpkg authors patch the version requirement (https://github.com/microsoft/vcpkg-tool/blob/main/cmake/CMakeRC_cmake_4.patch),
+  #   however the patch didn't quite work up until vcpkg-tool 2025-10-10, while our/libdave's vcpkg submodule still uses 2025-06-02.
+  #   Until the submodule is updated, this env variable is needed.
+  #   See also https://github.com/apache/arrow/pull/47616#issuecomment-3387347510.
+  "env CMAKE_POLICY_VERSION_MINIMUM=3.5 ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
 ]
 
 # Needed for full C++17 support on macOS
