@@ -104,12 +104,17 @@ cache-keys = [
 [tool.cibuildwheel]
 build = [
   "cp311-win_amd64",
+  "cp311-win_arm64",
   "cp311-macosx_*",
   "cp311-manylinux_*",
   "cp311-musllinux_*",
 ]
 build-verbosity = 1
 environment-pass = ["VCPKG_BINARY_SOURCES"]
+
+[tool.cibuildwheel.windows]
+# cross-compile arm64 on x86_64 runners
+archs = ["all"]
 
 # - see https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#dependencies
 [tool.cibuildwheel.linux]
