@@ -105,7 +105,7 @@ build = [
   "cp311-musllinux_*",
 ]
 build-verbosity = 1
-environment-pass = ["VCPKG_BINARY_SOURCES"]
+environment-pass = ["VCPKG_BINARY_SOURCES", "CI"]
 
 [tool.cibuildwheel.windows]
 # cross-compile arm64 on x86_64 runners
