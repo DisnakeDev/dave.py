@@ -123,7 +123,7 @@ before-all = "brew install zip unzip curl pkgconfig nasm go"
 # manylinux uses dnf/yum (because almalinux), musllinux (obviously) does not
 select = ["*-musllinux_*"]
 before-all = [
-  "apk add git curl zip unzip pkgconfig nasm go",
+  "apk add git curl zip unzip pkgconfig nasm go ninja-build ninja-is-really-ninja",
   # redownload vcpkg binary for musllinux
   "./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
 ]
