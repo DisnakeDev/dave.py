@@ -136,7 +136,7 @@ before-all = [
 ]
 
 [[tool.cibuildwheel.overrides]]
-select = "*linux_{aarch64,armv7l,ppc64le,s390x}"
+select = "*linux_{aarch64,armv7l,ppc64le,s390x,riscv64}"
 environment = { VCPKG_FORCE_SYSTEM_BINARIES = "1" }
 
 # Needed for full C++17 support on macOS
