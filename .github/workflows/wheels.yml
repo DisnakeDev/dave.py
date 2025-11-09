@@ -92,7 +92,7 @@ jobs:
 
       - uses: ./.github/actions/prepare-vcpkg
         with:
-          os: ${{ matrix.os }}
+          os-arch-key: ${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.libc }}
           crypto: ${{ matrix.crypto }}
           cache-dir: ${{ github.workspace }}/vcpkg_cache
 

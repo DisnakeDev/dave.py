@@ -1,8 +1,8 @@
 name: Install build prerequisites
 
 inputs:
-  os:
-    description: The operating system (runner type) being used, e.g. `ubuntu-latest`
+  os-arch-key:
+    description: The runner OS, target arch, and libc implementation used for the cache key, e.g. `ubuntu-latest-riscv64-musl`
     required: true
   crypto:
     description: The crypto library being used
@@ -39,10 +39,10 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ inputs.cache-dir }}
-        key: v0-vcpkg-${{ inputs.os }}-${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-${{ hashFiles(format('libdave/cpp/vcpkg-alts/{0}/*', inputs.crypto)) }}
+        key: vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-${{ hashFiles(format('libdave/cpp/vcpkg-alts/{0}/*', inputs.crypto)) }}
         restore-keys: |
-          v0-vcpkg-${{ inputs.os }}-${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-
-          v0-vcpkg-${{ inputs.os }}-${{ inputs.crypto }}-
+          vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-
+          vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-
 
     - name: Run vcpkg bootstrap
       shell: bash
