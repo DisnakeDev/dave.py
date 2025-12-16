@@ -116,6 +116,7 @@ before-all = "brew install zip unzip curl pkgconfig nasm go"
 
 [tool.cibuildwheel.linux]
 before-all = [
+  # bootstrap vcpkg if binary doesn't already exists (in which case it was pulled from cache)
   # XXX: regarding CMAKE_POLICY_VERSION_MINIMUM:
   #   There are no prebuilt vcpkg binaries on some linux archs, so it has to build from source.
   #   A dependency of vcpkg, CMakeRC, requires cmake 3.x, while the linux image used by cibw usually ships with 4.x.
@@ -123,7 +124,7 @@ before-all = [
   #   however the patch didn't quite work up until vcpkg-tool 2025-10-10, while our/libdave's vcpkg submodule still uses 2025-06-02.
   #   Until the submodule is updated, this env variable is needed.
   #   See also https://github.com/apache/arrow/pull/47616#issuecomment-3387347510.
-  "env CMAKE_POLICY_VERSION_MINIMUM=3.5 ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
+  "[ -f ./libdave/cpp/vcpkg/vcpkg ] || env CMAKE_POLICY_VERSION_MINIMUM=3.5 ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
   # dependencies will be installed in the overrides below, since manylinux uses dnf/yum (because almalinux), and musllinux (obviously) does not
 ]
 
