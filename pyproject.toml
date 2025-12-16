@@ -126,7 +126,7 @@ before-all = [
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_*"]
 inherit.before-all = "prepend"
-before-all = ["dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd"]
+before-all = ["dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd ninja-build"]
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
