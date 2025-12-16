@@ -111,30 +111,35 @@ build = [
 build-verbosity = 1
 environment-pass = ["VCPKG_BINARY_SOURCES", "CI"]
 
-# - see https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#dependencies
-# - perl-IPC-Cmd is needed to build openssl
-[tool.cibuildwheel.linux]
-before-all = "dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd"
-
 [tool.cibuildwheel.macos]
 before-all = "brew install zip unzip curl pkgconfig nasm go"
 
-[[tool.cibuildwheel.overrides]]
-# manylinux uses dnf/yum (because almalinux), musllinux (obviously) does not
-select = ["*-musllinux_*"]
+[tool.cibuildwheel.linux]
 before-all = [
-  "apk add git curl zip unzip pkgconfig nasm go ninja-build ninja-is-really-ninja",
-  # redownload vcpkg binary for musllinux
   # XXX: regarding CMAKE_POLICY_VERSION_MINIMUM:
-  #   There are no prebuilt vcpkg binaries for arm64 musllinux, so it has to build from source.
-  #   A dependency of vcpkg, CMakeRC, requires cmake 3.x, while the musllinux image used by cibw ships with 4.x.
+  #   There are no prebuilt vcpkg binaries on some linux archs, so it has to build from source.
+  #   A dependency of vcpkg, CMakeRC, requires cmake 3.x, while the linux image used by cibw usually ships with 4.x.
   #   The vcpkg authors patch the version requirement (https://github.com/microsoft/vcpkg-tool/blob/main/cmake/CMakeRC_cmake_4.patch),
   #   however the patch didn't quite work up until vcpkg-tool 2025-10-10, while our/libdave's vcpkg submodule still uses 2025-06-02.
   #   Until the submodule is updated, this env variable is needed.
   #   See also https://github.com/apache/arrow/pull/47616#issuecomment-3387347510.
   "env CMAKE_POLICY_VERSION_MINIMUM=3.5 ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh",
+  # dependencies will be installed in the overrides below, since manylinux uses dnf/yum (because almalinux), and musllinux (obviously) does not
 ]
 
+# - see https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#dependencies
+# - perl-IPC-Cmd is needed to build openssl
+[[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_*"]
+inherit.before-all = "prepend"
+before-all = ["dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd"]
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_*"]
+inherit.before-all = "prepend"
+before-all = ["apk add git curl zip unzip pkgconfig nasm go ninja-build ninja-is-really-ninja"]
+
+# required to build vcpkg on other platforms
 [[tool.cibuildwheel.overrides]]
 select = "*linux_{aarch64,armv7l,ppc64le,s390x,riscv64}"
 environment = { VCPKG_FORCE_SYSTEM_BINARIES = "1" }

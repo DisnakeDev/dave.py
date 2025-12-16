@@ -49,9 +49,10 @@ runs:
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           libdave/cpp/vcpkg/bootstrap-vcpkg.bat
-        else
+        elif [ "${{ runner.os }}" = "macOS" ]; then
           ./libdave/cpp/vcpkg/bootstrap-vcpkg.sh
         fi
+        # linux will bootstrap later, since it runs in a separate container instead of directly on the host
 
     # NOTE: we don't currently build with boringssl, so this is no longer needed but retained here for future reference.
     # # Some versions of clang++ on macOS appear to always insert /usr/local/include at the start of the include paths,
