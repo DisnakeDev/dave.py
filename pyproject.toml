@@ -122,11 +122,11 @@ before-all = [
 ]
 
 # - see https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#dependencies
-# - perl-IPC-Cmd is needed to build openssl
+# - perl-IPC-Cmd + perl-FindBin are needed to build openssl
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_*"]
 inherit.before-all = "prepend"
-before-all = ["dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd ninja-build"]
+before-all = ["dnf install -y git curl zip unzip pkgconfig nasm golang perl-IPC-Cmd perl-FindBin ninja-build"]
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
