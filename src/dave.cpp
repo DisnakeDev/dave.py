@@ -177,8 +177,7 @@ public:
             &bytesWritten
         );
 
-        // TODO: use resultcode enum
-        if (result != 0) {
+        if (result != dave::Encryptor::ResultCode::Success) {
             DISCORD_LOG(LS_ERROR) << "encryption failed: " << result;
             return std::nullopt;
         }
