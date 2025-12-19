@@ -168,7 +168,7 @@ public:
             frame.size()
         );
 
-        auto requiredSize = GetMaxCiphertextByteSize(mediaType, frameView.size());
+        auto requiredSize = _encryptor->GetMaxCiphertextByteSize(mediaType, frameView.size());
         std::vector<uint8_t> outFrame(requiredSize);
         auto outFrameView = discord::dave::MakeArrayView(outFrame);
 
@@ -187,11 +187,6 @@ public:
             return std::nullopt;
         }
         return nb::bytes(outFrame.data(), bytesWritten);
-    }
-
-    // FIXME: this isn't really needed in the public interface
-    size_t GetMaxCiphertextByteSize(discord::dave::MediaType mediaType, size_t frameSize) {
-        return _encryptor->GetMaxCiphertextByteSize(mediaType, frameSize);
     }
 
     discord::dave::EncryptorStats GetStats(discord::dave::MediaType mediaType) {
@@ -293,8 +288,6 @@ NB_MODULE(_dave_impl, m) {
             &EncryptorWrapper::CodecForSsrc, nb::arg("ssrc"))
         .def("encrypt",
             &EncryptorWrapper::Encrypt, nb::arg("media_type"), nb::arg("ssrc"), nb::arg("frame"))
-        .def("get_max_ciphertext_byte_size",
-            &EncryptorWrapper::GetMaxCiphertextByteSize, nb::arg("media_type"), nb::arg("frame_size"))
         .def("get_stats",
             &EncryptorWrapper::GetStats, nb::arg("media_type"))
         .def("set_protocol_version_changed_callback",
