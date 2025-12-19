@@ -17,7 +17,7 @@
 #include <dave/encryptor.h>
 #include <dave/version.h>
 #include <dave/mls/session.h>
-#include <dave/utils/array_view.h>
+#include <dave_interfaces.h>
 
 #include "logging.hpp"
 #include "utils.hpp"
@@ -39,20 +39,42 @@ std::variant<RejectType, T> unwrapRejection(std::variant<discord::dave::failed_t
     return std::get<T>(std::move(variant));
 }
 
-class SessionWrapper : public discord::dave::mls::Session {
+class SessionWrapper {
+private:
+    std::unique_ptr<discord::dave::mls::Session> _session;
 public:
-    // inherit constructor
-    using discord::dave::mls::Session::Session;
+    SessionWrapper(
+        discord::dave::mls::KeyPairContextType context,
+        std::string authSessionId,
+        discord::dave::mls::MLSFailureCallback callback)
+    {
+        _session = std::make_unique<discord::dave::mls::Session>(context, authSessionId, callback);
+    }
+
+    void Init(
+        discord::dave::ProtocolVersion version,
+        uint64_t groupId,
+        std::string const& selfUserId,
+        std::shared_ptr<::mlspp::SignaturePrivateKey>& transientKey)
+    {
+        _session->Init(version, groupId, selfUserId, transientKey);
+    }
+
+    void Reset() { _session->Reset(); }
+
+    void SetProtocolVersion(discord::dave::ProtocolVersion version) { _session->SetProtocolVersion(version); }
+
+    discord::dave::ProtocolVersion GetProtocolVersion() { return _session->GetProtocolVersion(); }
 
     void SetExternalSender(nb::bytes marshalledExternalSender) {
-        return discord::dave::mls::Session::SetExternalSender(nb::bytes_to_vector(marshalledExternalSender));
+        return _session->SetExternalSender(nb::bytes_to_vector(marshalledExternalSender));
     }
 
     std::optional<nb::bytes> ProcessProposals(
         nb::bytes proposals,
         std::set<std::string> const& recognizedUserIDs
     ) {
-        auto res = discord::dave::mls::Session::ProcessProposals(
+        auto res = _session->ProcessProposals(
             nb::bytes_to_vector(proposals),
             recognizedUserIDs
         );
@@ -62,32 +84,41 @@ public:
     }
 
     std::variant<RejectType, discord::dave::RosterMap> ProcessCommit(nb::bytes commit) {
-        return unwrapRejection(discord::dave::mls::Session::ProcessCommit(nb::bytes_to_vector(commit)));
+        return unwrapRejection(_session->ProcessCommit(nb::bytes_to_vector(commit)));
     }
 
     std::optional<discord::dave::RosterMap> ProcessWelcome(
         nb::bytes welcome,
         std::set<std::string> const& recognizedUserIDs
     ) {
-        return discord::dave::mls::Session::ProcessWelcome(
+        return _session->ProcessWelcome(
             nb::bytes_to_vector(welcome),
             recognizedUserIDs
         );
     }
 
     nb::bytes GetMarshalledKeyPackage() {
-        return nb::vector_to_bytes(discord::dave::mls::Session::GetMarshalledKeyPackage());
+        return nb::vector_to_bytes(_session->GetMarshalledKeyPackage());
     }
 
     nb::bytes GetLastEpochAuthenticator() {
-        return nb::vector_to_bytes(discord::dave::mls::Session::GetLastEpochAuthenticator());
+        return nb::vector_to_bytes(_session->GetLastEpochAuthenticator());
+    }
+
+    std::unique_ptr<discord::dave::MlsKeyRatchet> GetKeyRatchet(std::string const& userId) const noexcept {
+        auto ratchet = _session->GetKeyRatchet(userId);
+        // XXX: since we expose MlsKeyRatchet as an opaque type anyway, could we actually just return the opaque IKeyRatchet?
+        // required to cast unique_ptr<IKeyRatchet> to unique_ptr<MlsKeyRatchet>
+        return std::unique_ptr<discord::dave::MlsKeyRatchet>(
+            static_cast<discord::dave::MlsKeyRatchet*>(ratchet.release())
+        );
     }
 
     nb::object GetPairwiseFingerprint(
         uint16_t version, std::string const& userId
     ) {
         auto fut = nb::module_::import_("asyncio").attr("Future")();
-        discord::dave::mls::Session::GetPairwiseFingerprint(
+        _session->GetPairwiseFingerprint(
             version,
             userId,
             [fut = gil_object_wrapper(fut)] (std::vector<uint8_t> const& result) {
@@ -103,14 +134,29 @@ public:
     }
 };
 
-class EncryptorWrapper : public discord::dave::Encryptor {
+class EncryptorWrapper {
+private:
+    std::unique_ptr<discord::dave::Encryptor> _encryptor;
 public:
-    // inherit constructor
-    using discord::dave::Encryptor::Encryptor;
+    EncryptorWrapper() {
+        _encryptor = std::make_unique<discord::dave::Encryptor>();
+    }
 
     void SetKeyRatchet(std::unique_ptr<discord::dave::MlsKeyRatchet> keyRatchet) {
-        return discord::dave::Encryptor::SetKeyRatchet(std::move(keyRatchet));
+        return _encryptor->SetKeyRatchet(std::move(keyRatchet));
     }
+
+    void SetPassthroughMode(bool passthroughMode) { _encryptor->SetPassthroughMode(passthroughMode); }
+
+    bool HasKeyRatchet() { return _encryptor->HasKeyRatchet(); }
+
+    bool IsPassthroughMode() { return _encryptor->IsPassthroughMode(); }
+
+    void AssignSsrcToCodec(uint32_t ssrc, discord::dave::Codec codecType) {
+        _encryptor->AssignSsrcToCodec(ssrc, codecType);
+    }
+
+    discord::dave::Codec CodecForSsrc(uint32_t ssrc) { return _encryptor->CodecForSsrc(ssrc); }
 
     std::optional<nb::bytes> Encrypt(
         discord::dave::MediaType mediaType,
@@ -127,7 +173,7 @@ public:
         auto outFrameView = discord::dave::MakeArrayView(outFrame);
 
         size_t bytesWritten = 0;
-        auto result = discord::dave::Encryptor::Encrypt(
+        auto result = _encryptor->Encrypt(
             mediaType,
             ssrc,
             frameView,
@@ -135,12 +181,28 @@ public:
             &bytesWritten
         );
 
+        // TODO: use resultcode enum
         if (result != 0) {
             DISCORD_LOG(LS_ERROR) << "encryption failed: " << result;
             return std::nullopt;
         }
         return nb::bytes(outFrame.data(), bytesWritten);
     }
+
+    // FIXME: this isn't really needed in the public interface
+    size_t GetMaxCiphertextByteSize(discord::dave::MediaType mediaType, size_t frameSize) {
+        return _encryptor->GetMaxCiphertextByteSize(mediaType, frameSize);
+    }
+
+    discord::dave::EncryptorStats GetStats(discord::dave::MediaType mediaType) {
+        return _encryptor->GetStats(mediaType);
+    }
+
+    void SetProtocolVersionChangedCallback(discord::dave::Encryptor::ProtocolVersionChangedCallback callback) {
+        _encryptor->SetProtocolVersionChangedCallback(callback);
+    }
+
+    discord::dave::ProtocolVersion GetProtocolVersion() { return _encryptor->GetProtocolVersion(); }
 };
 
 NB_MODULE(_dave_impl, m) {
@@ -184,7 +246,7 @@ NB_MODULE(_dave_impl, m) {
         .def_ro("encrypt_missing_key_count", &discord::dave::EncryptorStats::encryptMissingKeyCount);
 
     nb::class_<SessionWrapper>(m, "Session")
-        .def(nb::init<discord::dave::mls::KeyPairContextType, std::string, discord::dave::mls::Session::MLSFailureCallback>(),
+        .def(nb::init<discord::dave::mls::KeyPairContextType, std::string, discord::dave::mls::MLSFailureCallback>(),
             nb::arg("context"), nb::arg("auth_session_id"), nb::arg("mls_failure_callback"))
         .def("init",
             &SessionWrapper::Init, nb::arg("version"), nb::arg("group_id"), nb::arg("self_user_id"), nb::arg("transient_key").none())
@@ -208,6 +270,7 @@ NB_MODULE(_dave_impl, m) {
             &SessionWrapper::GetMarshalledKeyPackage)
         .def("get_key_ratchet",
             &SessionWrapper::GetKeyRatchet, nb::arg("user_id"),
+            // TODO: fix by using optional?
             // explicit signature as this can return a nullptr
             nb::sig("def get_key_ratchet(self, user_id: str) -> MlsKeyRatchet | None"))
         .def("get_pairwise_fingerprint",

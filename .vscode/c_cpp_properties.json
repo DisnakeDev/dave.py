@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/libdave/cpp/includes",
                 "/usr/local/include/python3.12"
             ],
             "defines": [],
