@@ -30,9 +30,7 @@ void log_sink(
     nb::gil_scoped_acquire acquire;
 
     // get logger instance
-    // TODO: cache this in a std::atomic or something
     auto logging = nb::module_::import_("logging");
-    // TODO: make logger name configurable from python?
     auto logger = logging.attr("getLogger")("libdave");
 
     // check if level is enabled
