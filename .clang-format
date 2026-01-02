@@ -1,0 +1,11 @@
+BasedOnStyle: Google
+ColumnLimit: 100
+IndentWidth: 4
+UseTab: Never
+
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+AlignAfterOpenBracket: BlockIndent
+BinPackArguments: false
+BinPackParameters: false
