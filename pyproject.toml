@@ -53,6 +53,7 @@ include = [
 line-length = 100
 extend-exclude = [
   "libdave/",
+  "src/**/*.pyi",
 ]
 
 [tool.ruff.lint]
