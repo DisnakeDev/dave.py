@@ -1,6 +1,6 @@
 import dave
 
-# The test setup is extremely simple, it primarily serves as a smoke test for CI for now.
+# This test setup is extremely simple, it primarily serves as a smoke test for CI for now.
 
 
 def test_max_version() -> None:

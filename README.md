@@ -29,8 +29,7 @@
 3. Install Python dependencies:
 
     ```sh
-    # (optional: consider creating a venv beforehand)
-    $ pip install nanobind scikit-build-core[pyproject]
+    $ uv sync --all-groups
     ```
 
 ## How to build
