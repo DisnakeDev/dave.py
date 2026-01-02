@@ -1,7 +1,6 @@
+#include <dave/logger.h>
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
-
-#include <dave/logger.h>
 
 namespace nb = nanobind;
 
@@ -22,10 +21,7 @@ int map_logging_level(discord::dave::LoggingSeverity sev) {
 }
 
 void log_sink(
-    discord::dave::LoggingSeverity severity,
-    const char* file,
-    int line,
-    const std::string& message
+    discord::dave::LoggingSeverity severity, const char* file, int line, const std::string& message
 ) {
     nb::gil_scoped_acquire acquire;
 
@@ -41,17 +37,15 @@ void log_sink(
 
     // create + emit LogRecord
     auto record = logger.attr("makeRecord")(
-        "libdave",  // name
-        level,  // level
-        file,  // pathname
-        line,  // lineno
-        message,  // msg
+        "libdave",    // name
+        level,        // level
+        file,         // pathname
+        line,         // lineno
+        message,      // msg
         nb::tuple(),  // args
-        nb::none()  // exc_info
+        nb::none()    // exc_info
     );
     logger.attr("handle")(record);
 }
 
-void init_logging() {
-    discord::dave::SetLogSink(log_sink);
-}
+void init_logging() { discord::dave::SetLogSink(log_sink); }
