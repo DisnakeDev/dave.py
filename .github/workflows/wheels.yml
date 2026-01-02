@@ -66,13 +66,19 @@ jobs:
           # mix in crypto libraries into every entry
           matrix = [{**m, "crypto": c} for m in matrix for c in crypto]
 
+          # add display names, these are just for displaying on GitHub
+          for m in matrix:
+              m["display_name"] = ", ".join(filter(None, [
+                  m["os"], m.get("arch"), m.get("libc")
+              ]))
+
           import json
           print(json.dumps(matrix))
           EOF
           )" >> $GITHUB_OUTPUT
 
   build_wheels:
-    name: Wheels (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.libc }})
+    name: Wheels (${{ matrix.display_name }})
     runs-on: ${{ matrix.os }}
     needs: generate_matrix
     strategy:
