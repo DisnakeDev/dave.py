@@ -11,9 +11,16 @@ authors = [{ name = "Disnake Development" }]
 
 [dependency-groups]
 dev = [
+  { include-group = "build" },
   { include-group = "nox" },
   { include-group = "tools" },
   { include-group = "typing" },
+]
+# note: these should match `build-system.requires`
+build = [
+  # FIXME: actually use nanobind python package instead of git submodule
+  "nanobind>=2.9.2",
+  "scikit-build-core>=0.11.0"
 ]
 nox = [
   "nox==2025.5.1",
