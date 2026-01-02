@@ -24,6 +24,9 @@ build = [
 nox = [
   "nox==2025.5.1",
 ]
+test = [
+  "pytest~=8.0",
+]
 tools = [
   "poethepoet>=0.30.0",
   "prek~=0.2.1",
@@ -45,6 +48,7 @@ pyright = { cmd = "nox -Rs pyright --", help = "Run pyright" }
 typeCheckingMode = "strict"
 include = [
   "src/",
+  "tests/",
   "*.py",
 ]
 
@@ -76,11 +80,21 @@ ignore = [
   "PLR2004",
 ]
 
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**.py" = ["S101"]  # allow asserts in tests
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+addopts = "--strict-markers -Werror"
+xfail_strict = true
 
 
 [tool.uv]
@@ -115,6 +129,9 @@ build = [
 ]
 build-verbosity = 1
 environment-pass = ["CI", "VCPKG_BINARY_SOURCES", "COPY_VCPKG_BINARY_PATH"]
+
+test-command = "pytest {project}/tests"
+test-groups = ["test"]  # see [dependency-groups]
 
 [tool.cibuildwheel.macos]
 before-all = "brew install zip unzip curl pkgconfig nasm go"
