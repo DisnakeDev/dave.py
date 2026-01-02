@@ -49,7 +49,12 @@ find_package(
     REQUIRED COMPONENTS Interpreter Development.Module
     OPTIONAL_COMPONENTS Development.SABIModule
 )
-add_subdirectory(nanobind)
+
+# Find (and load) nanobind, see https://nanobind.readthedocs.io/en/latest/building.html#finding-nanobind
+execute_process(
+  COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
+  OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE nanobind_ROOT)
+find_package(nanobind CONFIG REQUIRED)
 
 nanobind_add_module(_dave_impl STABLE_ABI src/dave.cpp)
 

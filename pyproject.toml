@@ -18,8 +18,7 @@ dev = [
 ]
 # note: these should match `build-system.requires`
 build = [
-  # FIXME: actually use nanobind python package instead of git submodule
-  "nanobind>=2.9.2",
+  "nanobind~=2.9.2",
   "scikit-build-core>=0.11.0"
 ]
 nox = [
@@ -35,7 +34,7 @@ typing = [
 ]
 
 [build-system]
-requires = ["nanobind>=2.9.2", "scikit-build-core>=0.11.0"]
+requires = ["nanobind~=2.9.2", "scikit-build-core>=0.11.0"]
 build-backend = "scikit_build_core.build"
 
 [tool.poe.tasks]
@@ -54,7 +53,6 @@ include = [
 line-length = 100
 extend-exclude = [
   "libdave/",
-  "nanobind/",
 ]
 
 [tool.ruff.lint]
