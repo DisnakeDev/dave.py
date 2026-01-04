@@ -1,10 +1,8 @@
 #include "signature_key_pair.hpp"
 
 #include <dave/mls/parameters.h>
-#include <nanobind/stl/string.h>
 
-namespace nb = nanobind;
-namespace dave = discord::dave;
+#include "binding_core.hpp"
 
 SignatureKeyPair SignatureKeyPair::generate(dave::ProtocolVersion version) {
     auto suite = dave::mls::CiphersuiteForProtocolVersion(version);

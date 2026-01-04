@@ -1,12 +1,7 @@
 #include <dave/encryptor.h>
 #include <dave/logger.h>
-#include <nanobind/nanobind.h>
-#include <nanobind/stl/function.h>
-#include <nanobind/stl/optional.h>
-#include <nanobind/stl/unique_ptr.h>
 
-namespace nb = nanobind;
-namespace dave = discord::dave;
+#include "binding_core.hpp"
 
 class EncryptorWrapper {
 private:

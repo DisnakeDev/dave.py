@@ -1,10 +1,8 @@
 #pragma once
 
-#include <nanobind/nanobind.h>
-
 #include <vector>
 
-namespace nb = nanobind;
+#include "binding_core.hpp"
 
 namespace nanobind {
 

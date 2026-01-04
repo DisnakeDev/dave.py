@@ -1,9 +1,8 @@
 #pragma once
 
 #include <dave/mls/parameters.h>
-#include <nanobind/nanobind.h>
 
-namespace dave = discord::dave;
+#include "binding_core.hpp"
 
 class SignatureKeyPair {
 private:

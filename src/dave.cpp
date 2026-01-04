@@ -1,10 +1,7 @@
 #include <dave/common.h>
-#include <nanobind/nanobind.h>
 
+#include "binding_core.hpp"
 #include "logging.hpp"
-
-namespace nb = nanobind;
-namespace dave = discord::dave;
 
 // since these are all (mostly) self-contained bindings,
 // just forward-declare these functions instead of writing headers for everything

@@ -1,20 +1,8 @@
 #include <dave/mls/session.h>
-#include <nanobind/nanobind.h>
-#include <nanobind/stl/function.h>
-#include <nanobind/stl/map.h>
-#include <nanobind/stl/optional.h>
-#include <nanobind/stl/set.h>
-#include <nanobind/stl/shared_ptr.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/unique_ptr.h>
-#include <nanobind/stl/variant.h>
-#include <nanobind/stl/vector.h>
 
+#include "binding_core.hpp"
 #include "signature_key_pair.hpp"
 #include "utils.hpp"
-
-namespace nb = nanobind;
-namespace dave = discord::dave;
 
 // used instead of std::variant for hard-/soft-rejecting messages
 enum RejectType : uint8_t {
