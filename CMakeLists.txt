@@ -44,11 +44,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 project(dave LANGUAGES CXX)
 
-find_package(
-    Python
-    REQUIRED COMPONENTS Interpreter Development.Module
-    OPTIONAL_COMPONENTS Development.SABIModule
-)
+find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
 # Find (and load) nanobind, see https://nanobind.readthedocs.io/en/latest/building.html#finding-nanobind
 execute_process(
@@ -57,7 +53,7 @@ execute_process(
 find_package(nanobind CONFIG REQUIRED)
 
 nanobind_add_module(
-    _dave_impl STABLE_ABI
+    _dave_impl
     src/dave.cpp
     src/decryptor.cpp
     src/encryptor.cpp
