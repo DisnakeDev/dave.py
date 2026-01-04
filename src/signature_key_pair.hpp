@@ -1,3 +1,5 @@
+#pragma once
+
 #include <dave/mls/parameters.h>
 #include <nanobind/nanobind.h>
 

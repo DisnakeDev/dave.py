@@ -1,3 +1,5 @@
+#pragma once
+
 #include <dave/logger.h>
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
