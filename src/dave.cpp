@@ -1,6 +1,7 @@
 #include <dave/common.h>
 #include <dave/decryptor.h>
 #include <dave/encryptor.h>
+#include <dave/mls/parameters.h>
 #include <dave/mls/session.h>
 #include <dave/version.h>
 #include <dave_interfaces.h>
@@ -42,26 +43,54 @@ std::variant<RejectType, T> unwrapRejection(
     return std::get<T>(std::move(variant));
 }
 
+class SignatureKeyPair {
+private:
+    SignatureKeyPair(std::shared_ptr<mlspp::SignaturePrivateKey> privateKey)
+        : privateKey(privateKey) {}
+
+public:
+    std::shared_ptr<mlspp::SignaturePrivateKey> privateKey;
+
+    static SignatureKeyPair generate(dave::ProtocolVersion version) {
+        auto suite = dave::mls::CiphersuiteForProtocolVersion(version);
+        return {std::make_shared<mlspp::SignaturePrivateKey>(
+            mlspp::SignaturePrivateKey::generate(suite)
+        )};
+    }
+
+    static SignatureKeyPair load(dave::ProtocolVersion version, const std::string& str) {
+        auto suite = dave::mls::CiphersuiteForProtocolVersion(version);
+        return {std::make_shared<mlspp::SignaturePrivateKey>(
+            mlspp::SignaturePrivateKey::from_jwk(suite, str)
+        )};
+    }
+
+    std::string dump(dave::ProtocolVersion version) {
+        auto suite = dave::mls::CiphersuiteForProtocolVersion(version);
+        return privateKey->to_jwk(suite);
+    }
+};
+
 class SessionWrapper {
 private:
     std::unique_ptr<dave::mls::Session> _session;
 
 public:
-    SessionWrapper(
-        dave::mls::KeyPairContextType context,
-        std::string authSessionId,
-        dave::mls::MLSFailureCallback callback
-    ) {
-        _session = std::make_unique<dave::mls::Session>(context, authSessionId, callback);
+    SessionWrapper(dave::mls::MLSFailureCallback callback) {
+        // context and authSessionId are only used for persistent keys, which we don't implement
+        // (it builds with the null/placeholder implementation, so the key store would
+        // never return anything anyway)
+        _session = std::make_unique<dave::mls::Session>("", "", callback);
     }
 
     void Init(
         dave::ProtocolVersion version,
         uint64_t groupId,
         std::string const& selfUserId,
-        std::shared_ptr<::mlspp::SignaturePrivateKey>& transientKey
+        std::shared_ptr<SignatureKeyPair>& transientKey
     ) {
-        _session->Init(version, groupId, selfUserId, transientKey);
+        auto key = transientKey != nullptr ? transientKey->privateKey : nullptr;
+        _session->Init(version, groupId, selfUserId, key);
     }
 
     void Reset() { _session->Reset(); }
@@ -246,7 +275,11 @@ NB_MODULE(_dave_impl, m) {
 
     m.def("get_max_supported_protocol_version", dave::MaxSupportedProtocolVersion);
 
-    nb::class_<::mlspp::SignaturePrivateKey>(m, "SignaturePrivateKey");
+    nb::class_<SignatureKeyPair>(m, "SignatureKeyPair")
+        .def_static("generate", &SignatureKeyPair::generate, nb::arg("version"))
+        .def_static("load", &SignatureKeyPair::load, nb::arg("version"), nb::arg("data"))
+        .def("dump", &SignatureKeyPair::dump, nb::arg("version"));
+
     nb::class_<dave::IKeyRatchet>(m, "IKeyRatchet");
 
     nb::class_<dave::EncryptorStats>(m, "EncryptorStats")
@@ -268,12 +301,7 @@ NB_MODULE(_dave_impl, m) {
         .def_ro("decrypt_invalid_nonce_count", &dave::DecryptorStats::decryptInvalidNonceCount);
 
     nb::class_<SessionWrapper>(m, "Session")
-        .def(
-            nb::init<dave::mls::KeyPairContextType, std::string, dave::mls::MLSFailureCallback>(),
-            nb::arg("context"),
-            nb::arg("auth_session_id"),
-            nb::arg("mls_failure_callback")
-        )
+        .def(nb::init<dave::mls::MLSFailureCallback>(), nb::arg("mls_failure_callback"))
         .def(
             "init",
             &SessionWrapper::Init,
