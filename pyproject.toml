@@ -118,7 +118,14 @@ cmake.define = { BUILD_SHARED_LIBS = "OFF" }
 
 
 [tool.cibuildwheel]
-skip = ["pp*", "gp*"]
+# can't set `skip` here, since it's used in the gh workflow and would be overridden
+build = [
+  "cp*-win_amd64",
+  "cp*-win_arm64",
+  "cp*-macosx_*",
+  "cp*-manylinux_*",
+  "cp*-musllinux_*",
+]
 build-verbosity = 1
 environment-pass = ["CI", "VCPKG_BINARY_SOURCES", "COPY_VCPKG_BINARY_PATH"]
 
