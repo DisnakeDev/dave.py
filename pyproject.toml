@@ -118,13 +118,7 @@ cmake.define = { BUILD_SHARED_LIBS = "OFF" }
 
 
 [tool.cibuildwheel]
-build = [
-  "cp311-win_amd64",
-  "cp311-win_arm64",
-  "cp311-macosx_*",
-  "cp311-manylinux_*",
-  "cp311-musllinux_*",
-]
+skip = ["pp*", "gp*"]
 build-verbosity = 1
 environment-pass = ["CI", "VCPKG_BINARY_SOURCES", "COPY_VCPKG_BINARY_PATH"]
 
