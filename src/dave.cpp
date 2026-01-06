@@ -11,6 +11,13 @@ void bindSession(nb::module_& m);
 void bindSignatureKeyPair(nb::module_& m);
 
 NB_MODULE(_dave_impl, m) {
+#ifdef NDEBUG
+    // disable leak warnings in release builds.
+    // these can happen during abrupt interpreter shutdown (even just ctrl+c, sometimes),
+    // but are simply false-positives from what I can tell.
+    nb::set_leak_warnings(false);
+#endif
+
     init_logging();
 
     m.doc() = "Python bindings to the C++ impl of Discord's DAVE protocol";
