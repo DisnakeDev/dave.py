@@ -60,7 +60,7 @@ void bindEncryptor(nb::module_& m) {
         .def(
             "set_protocol_version_changed_callback",
             &dave::Encryptor::SetProtocolVersionChangedCallback,
-            nb::arg("callback")
+            nb::arg("callback").none()
         )
         .def("get_protocol_version", &dave::Encryptor::GetProtocolVersion);
 }

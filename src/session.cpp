@@ -34,7 +34,7 @@ void bindSession(nb::module_& m) {
                 // would never return anything anyway)
                 new (self) dave::mls::Session("", "", callback);
             },
-            nb::arg("mls_failure_callback")
+            nb::arg("mls_failure_callback").none()
         )
         .def(
             "init",
