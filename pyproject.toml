@@ -116,6 +116,11 @@ wheel.packages = ["src/dave"]
 cmake.build-type = "Release"
 cmake.define = { BUILD_SHARED_LIBS = "OFF" }
 
+# Default to debug builds in devcontainer (which sets this env variable globally)
+[[tool.scikit-build.overrides]]
+if.env.BUILD_DEBUG = true
+cmake.build-type = "Debug"
+
 
 [tool.cibuildwheel]
 skip = [

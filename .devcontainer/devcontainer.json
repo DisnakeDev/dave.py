@@ -9,6 +9,10 @@
     // "forwardPorts": [],
     // "postCreateCommand": "pip3 install --user -r requirements.txt",
 
+    "containerEnv": {
+        "BUILD_DEBUG": "1"
+    },
+
     "customizations": {
         "vscode": {
             "settings": {
