@@ -77,8 +77,9 @@ runs:
     # Especially on emulated architectures, this reduces initial build time by ~1h.
     - name: Only create `Release` builds of dependencies
       shell: bash
+      working-directory: libdave/cpp/vcpkg
       run: |
-        for f in $(find ./libdave/cpp/vcpkg/triplets -name '*.cmake'); do
+        for f in $(find ./triplets -name '*.cmake'); do
           echo "set(VCPKG_BUILD_TYPE release)" >> "$f"
           git update-index --assume-unchanged "$f"
         done
