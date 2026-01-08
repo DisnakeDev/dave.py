@@ -72,6 +72,17 @@ runs:
         VCPKG_PATH="$PWD/libdave/cpp/vcpkg/vcpkg"
         echo "COPY_VCPKG_BINARY_PATH=/host${VCPKG_PATH}" >> $GITHUB_ENV
 
+    # This is awful and certainly not the intended way of doing things,
+    # but it works for CI purposes.
+    # Especially on emulated architectures, this reduces initial build time by ~1h.
+    - name: Only create `Release` builds of dependencies
+      shell: bash
+      run: |
+        for f in $(find ./libdave/cpp/vcpkg/triplets -name '*.cmake'); do
+          echo "set(VCPKG_BUILD_TYPE release)" >> "$f"
+          git update-index --assume-unchanged "$f"
+        done
+
     # NOTE: we don't currently build with boringssl, so this is no longer needed but retained here for future reference.
     # # Some versions of clang++ on macOS appear to always insert /usr/local/include at the start of the include paths,
     # # notably disregarding -isystem. This breaks building with boringssl, since the includes end up conflicting.
