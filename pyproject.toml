@@ -125,8 +125,6 @@ cmake.build-type = "Debug"
 
 [tool.cibuildwheel]
 skip = [
-  # pypy
-  "pp*",
   # 32bit windows
   "*-win32",
   # free-threaded python versions
