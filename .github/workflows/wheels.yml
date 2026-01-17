@@ -45,7 +45,7 @@ jobs:
           #     "ubuntu-latest": ["native", "ppc64le", "s390x", "riscv64"],
           #     "ubuntu-24.04-arm": ["native", "armv7l"],
           # }
-          single = ["windows-latest"]
+          single = ["windows-latest", "macos-latest"]
           ubuntu_archs = {"ubuntu-latest": ["native"]}
           # this will be the only one for now
           crypto = ["openssl_3"]
