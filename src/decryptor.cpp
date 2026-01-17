@@ -1,5 +1,5 @@
-#include <dave/decryptor.h>
 #include <dave/logger.h>
+#include <decryptor.h>
 
 #include "binding_core.hpp"
 

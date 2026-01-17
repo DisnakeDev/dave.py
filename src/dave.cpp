@@ -1,4 +1,4 @@
-#include <dave/common.h>
+#include <dave/version.h>
 
 #include "binding_core.hpp"
 #include "logging.hpp"
@@ -21,9 +21,6 @@ NB_MODULE(_dave_impl, m) {
     init_logging();
 
     m.doc() = "Python bindings to the C++ impl of Discord's DAVE protocol";
-
-    m.attr("INIT_TRANSITION_ID") = dave::kInitTransitionId;
-    m.attr("DISABLED_VERSION") = dave::kDisabledVersion;
 
     nb::enum_<dave::MediaType>(m, "MediaType", nb::is_arithmetic(), "")
         .value("audio", dave::MediaType::Audio, "")

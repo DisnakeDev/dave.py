@@ -83,7 +83,10 @@ nanobind_add_stub(
 
 
 # Link libdave
+set(INSTALL_VCPKG_LICENSES ON)
 add_subdirectory(${LIBDAVE_SRC_PATH})
+
+target_include_directories(_dave_impl PRIVATE "${LIBDAVE_SRC_PATH}/src")
 target_link_libraries(_dave_impl PRIVATE libdave)
 
 # Install library and stub file in wheel
