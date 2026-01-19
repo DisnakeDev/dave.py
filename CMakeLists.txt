@@ -44,6 +44,7 @@ if (WIN32)
     endif()
 endif()
 
+
 project(dave LANGUAGES CXX)
 
 
@@ -63,6 +64,12 @@ nanobind_add_module(
     src/session.cpp
     src/signature_key_pair.cpp
 )
+
+if (MSVC)
+    target_compile_options(_dave_impl PRIVATE /W4 /WX)
+else()
+    target_compile_options(_dave_impl PRIVATE -Wall -pedantic -Wextra -Werror -Wconversion)
+endif()
 
 # Generate typing stub, additionally storing it in src directory for type hints during development.
 # If we ever add other dependencies, this will have to be gated by if(SKBUILD)
