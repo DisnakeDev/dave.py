@@ -110,7 +110,7 @@ nanobind_add_stub(
 
 
 # Link libdave
-add_subdirectory(${LIBDAVE_SRC_PATH})
+add_subdirectory(${LIBDAVE_SRC_PATH} EXCLUDE_FROM_ALL)
 
 target_include_directories(_dave_impl PRIVATE "${LIBDAVE_SRC_PATH}/src")
 target_link_libraries(_dave_impl PRIVATE libdave)
