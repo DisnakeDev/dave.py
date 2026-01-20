@@ -73,6 +73,8 @@ ignore = [
   "D",
   # flake8-errmsg
   "EM",
+  # flake8-no-pep420
+  "INP",
   # tryceratops
   "TRY003",  # long error messages
   #
@@ -83,6 +85,7 @@ ignore = [
 
 
 [tool.ruff.lint.per-file-ignores]
+"scripts/**.py" = ["S101", "T201"]
 "tests/**.py" = ["S101"]  # allow asserts in tests
 
 [tool.ruff.lint.isort]

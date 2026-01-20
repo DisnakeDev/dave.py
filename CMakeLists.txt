@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.19)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Warn if the user invokes CMake directly
@@ -110,8 +110,6 @@ nanobind_add_stub(
 
 
 # Link libdave
-set(INSTALL_VCPKG_LICENSES ON)
-set(LICENSES_DIR "${SKBUILD_METADATA_DIR}/licenses")
 add_subdirectory(${LIBDAVE_SRC_PATH})
 
 target_include_directories(_dave_impl PRIVATE "${LIBDAVE_SRC_PATH}/src")
@@ -120,3 +118,16 @@ target_link_libraries(_dave_impl PRIVATE libdave)
 # Install library and stub file in wheel
 install(TARGETS _dave_impl LIBRARY DESTINATION dave)
 install(FILES ${STUB_OUTPUT_PATH} DESTINATION dave)
+
+# Add all the required licenses to built wheel
+execute_process(
+    COMMAND "${Python_EXECUTABLE}" "scripts/collect_licenses.py"
+    "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" "${LIBDAVE_CRYPTO}"
+    COMMAND_ERROR_IS_FATAL ANY
+    OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE LICENSE_DATA
+)
+foreach(_LICENSE_DATA ${LICENSE_DATA})
+    list(GET _LICENSE_DATA 0 LICENSE_NAME)
+    list(GET _LICENSE_DATA 1 LICENSE_PATH)
+    install(FILES ${LICENSE_PATH} DESTINATION "${SKBUILD_METADATA_DIR}/licenses" RENAME ${LICENSE_NAME})
+endforeach()
