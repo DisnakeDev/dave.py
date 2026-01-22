@@ -31,4 +31,4 @@ for p in LICENSE_PATHS.values():
     if not p.is_file():
         raise RuntimeError(f"unable to find license file: {p}")
 
-print(";".join(f"{dep}\\;{path}" for dep, path in LICENSE_PATHS.items()))
+print(";".join(f"{dep}\\;{path.as_posix()}" for dep, path in LICENSE_PATHS.items()))
