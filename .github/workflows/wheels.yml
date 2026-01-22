@@ -115,8 +115,9 @@ jobs:
           CIBW_BUILD: ${{ matrix.libc == 'glibc' && '*manylinux*' || (matrix.libc == 'musl' && '*musllinux*' || '') }}
           CIBW_ARCHS: ${{ matrix.arch }}
 
+      # TODO: add another step to fail CI if .pyi changed in wheels?
       - name: Verify clean directory
-        run: git diff --exit-code
+        run: git diff --exit-code -- ":^src/**/*.pyi"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v5

@@ -221,7 +221,6 @@ build*/
 .vscode/*
 !.vscode/c_cpp_properties.json
 *.whl
-src/**/*.pyi
 
 # for CI
 vcpkg_cache/

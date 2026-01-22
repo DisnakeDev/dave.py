@@ -97,17 +97,6 @@ else()
     target_compile_options(_dave_impl PRIVATE -Wall -pedantic -Wextra -Werror -Wconversion)
 endif()
 
-# Generate typing stub, additionally storing it in src directory for type hints during development.
-# If we ever add other dependencies, this will have to be gated by if(SKBUILD)
-set(STUB_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/src/dave/_dave_impl.pyi")
-nanobind_add_stub(
-    dave_stub
-    MODULE _dave_impl
-    OUTPUT ${STUB_OUTPUT_PATH}
-    PYTHON_PATH $<TARGET_FILE_DIR:_dave_impl>
-    DEPENDS _dave_impl
-)
-
 
 # Link libdave
 add_subdirectory(${LIBDAVE_SRC_PATH} EXCLUDE_FROM_ALL)
@@ -115,9 +104,22 @@ add_subdirectory(${LIBDAVE_SRC_PATH} EXCLUDE_FROM_ALL)
 target_include_directories(_dave_impl PRIVATE "${LIBDAVE_SRC_PATH}/src")
 target_link_libraries(_dave_impl PRIVATE libdave)
 
+
+# Generate typing stub, additionally storing it in src directory for type hints during development.
+set(STUB_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/src/dave/_dave_impl.pyi")
+nanobind_add_stub(
+    dave_stub
+    MODULE _dave_impl
+    OUTPUT ${STUB_OUTPUT_PATH}
+    PYTHON_PATH $<TARGET_FILE_DIR:_dave_impl>
+    DEPENDS _dave_impl
+    PATTERN_FILE "${CMAKE_SOURCE_DIR}/scripts/nanobind_stub_pattern.txt"
+)
+
 # Install library and stub file in wheel
 install(TARGETS _dave_impl LIBRARY DESTINATION dave)
 install(FILES ${STUB_OUTPUT_PATH} DESTINATION dave)
+
 
 # Add all the required licenses to built wheel
 execute_process(
