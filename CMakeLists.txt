@@ -91,10 +91,12 @@ nanobind_add_module(
     src/signature_key_pair.cpp
 )
 
-if (MSVC)
-    target_compile_options(_dave_impl PRIVATE /W4 /WX)
-else()
-    target_compile_options(_dave_impl PRIVATE -Wall -pedantic -Wextra -Werror -Wconversion)
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(_dave_impl PRIVATE -Wall -pedantic -Wextra -Werror -Wimplicit-int-conversion)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  target_compile_options(_dave_impl PRIVATE -Wall -pedantic -Wextra -Werror -Wconversion)
+elseif (MSVC)
+  target_compile_options(_dave_impl PRIVATE /W4 /WX)
 endif()
 
 
