@@ -6,7 +6,7 @@
 
 Python bindings for [libdave](https://github.com/discord/libdave), Discord's C++ DAVE[^1] protocol implementation.
 
-See the [API docs](https://discord.com/developers/docs/topics/voice-connections#endtoend-encryption-dave-protocol) for a general overview of the protocol, as well as https://daveprotocol.com/ for an in-depth protocol description.
+See the [API docs](https://docs.discord.com/developers/topics/voice-connections#end-to-end-encryption-dave-protocol) for a general overview of the protocol, as well as https://daveprotocol.com/ for an in-depth protocol description.
 
 
 ## Installation
@@ -15,10 +15,11 @@ See the [API docs](https://discord.com/developers/docs/topics/voice-connections#
 pip install dave.py
 ```
 
-Prebuilt wheels for all platforms and many 64-bit architectures are available directly from PyPI.
+Prebuilt wheels for all platforms and many 64-bit architectures are available directly from PyPI (32-bit architectures are not supported).  
 If you're missing wheels for any specific platform/architecture, feel free to open an issue!
 
 To build from source, any PEP 517-compatible build frontend can be used, e.g. `python -m build`.
+Note that building from source (or sdist) also requires `$VCPKG_ROOT` to point to a [vcpkg](https://github.com/microsoft/vcpkg) clone, as well as a lot of patience.
 
 
 ## Usage
