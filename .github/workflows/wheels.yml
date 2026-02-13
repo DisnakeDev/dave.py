@@ -43,14 +43,11 @@ jobs:
         id: script
         run: |
           echo "matrix=$(python - <<EOF
-          # XXX: final setup, to be enabled later (once everything actually works)
-          # single = ["macos-15-intel", "macos-latest", "windows-latest", "windows-11-arm"]
-          # ubuntu_archs = {
-          #     "ubuntu-latest": ["native", "ppc64le", "s390x", "riscv64"],
-          #     "ubuntu-24.04-arm": ["native"],
-          # }
-          single = ["windows-latest", "macos-latest"]
-          ubuntu_archs = {"ubuntu-latest": ["native"]}
+          single = ["macos-15-intel", "macos-latest", "windows-latest", "windows-11-arm"]
+          ubuntu_archs = {
+              "ubuntu-latest": ["native", "ppc64le", "s390x", "riscv64"],
+              "ubuntu-24.04-arm": ["native"],
+          }
           # this will be the only one for now
           crypto = ["openssl_3"]
 
