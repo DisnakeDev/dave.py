@@ -3,7 +3,7 @@
 [project]
 name = "dave.py"
 version = "0.1.0a0"
-description = "Python bindings for the libdave package."
+description = "Python bindings for libdave, Discord's audio & video end-to-end encryption"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
