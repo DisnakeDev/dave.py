@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 [project]
-name = "libdave.py"
+name = "dave.py"
 version = "1.1.1a"
 description = "Python bindings for the libdave package."
 readme = "README.md"
