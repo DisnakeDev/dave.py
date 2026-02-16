@@ -2,14 +2,14 @@
 
 [project]
 name = "dave.py"
-version = "0.1.0a1"
+version = "0.1.0"
 description = "Python bindings for libdave, Discord's audio & video end-to-end encryption"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "Disnake Development" }]
 classifiers = [
-    "Development Status :: 3 - Alpha",  # FIXME
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
