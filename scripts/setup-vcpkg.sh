@@ -7,7 +7,7 @@ if [ -f "$_VCPKG_BINARY_PATH" ]; then
     exit 0
 fi
 
-# XXX: regarding CMAKE_POLICY_VERSION_MINIMUM:
+# NOTE: regarding CMAKE_POLICY_VERSION_MINIMUM:
 #   There are no prebuilt vcpkg binaries on some linux archs, so it has to build from source.
 #   A dependency of vcpkg, CMakeRC, requires cmake 3.x, while the linux image used by cibw usually ships with 4.x.
 #   The vcpkg authors patch the version requirement (https://github.com/microsoft/vcpkg-tool/blob/main/cmake/CMakeRC_cmake_4.patch),
