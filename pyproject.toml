@@ -65,6 +65,7 @@ pyright = { cmd = "nox -Rs pyright --", help = "Run pyright" }
 [tool.pyright]
 typeCheckingMode = "strict"
 include = [
+  "scripts/",
   "src/",
   "tests/",
   "*.py",
