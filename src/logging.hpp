@@ -29,7 +29,7 @@ void log_sink(
 
     // get logger instance
     auto logging = nb::module_::import_("logging");
-    auto logger = logging.attr("getLogger")("libdave");
+    auto logger = logging.attr("getLogger")("dave");
 
     // check if level is enabled
     auto level = map_logging_level(severity);
@@ -39,7 +39,7 @@ void log_sink(
 
     // create + emit LogRecord
     auto record = logger.attr("makeRecord")(
-        "libdave",    // name
+        "dave",       // name
         level,        // level
         file,         // pathname
         line,         // lineno
