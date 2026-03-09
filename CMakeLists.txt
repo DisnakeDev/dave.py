@@ -49,12 +49,15 @@ message(STATUS "Using vcpkg toolchain ${CMAKE_TOOLCHAIN_FILE}")
 # Architecture-specific ~~hacks~~ target specification
 if (WIN32)
     if (CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
-        set(VCPKG_TARGET_TRIPLET "x64-windows-static-md")
+        set(VCPKG_TARGET_TRIPLET "x64-windows-static")
     elseif (CMAKE_GENERATOR_PLATFORM STREQUAL "ARM64")
-        set(VCPKG_TARGET_TRIPLET "arm64-windows-static-md")
+        set(VCPKG_TARGET_TRIPLET "arm64-windows-static")
     else()
         message(FATAL_ERROR "unexpected platform: ${CMAKE_GENERATOR_PLATFORM}")
     endif()
+
+    # statically link msvc runtime
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 # This is more of a best-effort thing and not entirely reliable.
