@@ -2,6 +2,12 @@ name: Wheels
 
 on:
   workflow_dispatch:
+    inputs:
+      filter:
+        description: 'Only build specific platforms (regex)'
+        required: false
+        default: ''
+        type: string
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9a-z]+"
@@ -41,6 +47,8 @@ jobs:
           python-version: '3.12'
       - name: Run python matrix script
         id: script
+        env:
+          PLATFORM_FILTER: ${{ inputs.filter }}
         run: |
           echo "matrix=$(python - <<EOF
           single = ["macos-15-intel", "macos-latest", "windows-latest", "windows-11-arm"]
@@ -73,6 +81,15 @@ jobs:
               ]))
               # why on earth does GHA not have a `replace()` function
               m["artifact-tag"] = m["display-name"].replace(", ", "-")
+
+          # optionally filter only requested platforms
+          import os
+          if plat_filter := os.getenv("PLATFORM_FILTER"):
+              import re
+              matrix = [
+                  m for m in matrix
+                  if re.search(plat_filter, m["artifact-tag"])
+              ]
 
           import json
           print(json.dumps(matrix))
