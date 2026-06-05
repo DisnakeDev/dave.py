@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dave._dave_impl import *  # pyright: ignore[reportMissingImports]  # noqa: F403
+from dave._dave_impl import *  # pyright: ignore[reportMissingModuleSource]  # noqa: F403
 
 
 # https://daveprotocol.com/#displayable-codes
