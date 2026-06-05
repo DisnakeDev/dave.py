@@ -1,3 +1,5 @@
+"""Python bindings to the C++ impl of Discord's DAVE protocol"""
+
 import asyncio
 from collections.abc import Callable, Set
 import datetime
