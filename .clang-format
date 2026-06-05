@@ -9,3 +9,14 @@ AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
 BinPackArguments: false
 BinPackParameters: false
+
+# ensure nanobind headers always go first, due to https://docs.python.org/3/c-api/intro.html#include-files
+IncludeCategories:
+  - Regex: '^<nanobind/.*\.h>'
+    Priority: 1
+  - Regex: '^<.*\.h>'
+    Priority: 2
+  - Regex: '^<.*'
+    Priority: 3
+  - Regex: '.*'
+    Priority: 4
