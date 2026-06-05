@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/libdave/cpp/includes/dave",
                 "${workspaceFolder}/libdave/cpp/src",
-                "/usr/local/include/python3.12"
+                "/usr/local/include/python3.14"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

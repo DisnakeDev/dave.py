@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.12-bookworm
+FROM mcr.microsoft.com/devcontainers/python:3.14-trixie
 
 RUN apt-get update \
  && apt-get install -y build-essential cmake git curl zip nasm golang-go ninja-build \
