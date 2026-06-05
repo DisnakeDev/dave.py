@@ -1,4 +1,9 @@
-#include <dave/version.h>
+// n.b. the nanobind header needs to be first (or rather,
+// the transitive Python.h header), due to the first note here:
+// https://docs.python.org/3/c-api/intro.html#include-files
+#include <nanobind/nanobind.h>
+
+#include <dave/dave.h>
 
 #include "binding_core.hpp"
 #include "logging.hpp"

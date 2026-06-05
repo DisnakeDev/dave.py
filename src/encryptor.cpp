@@ -1,3 +1,5 @@
+#include <nanobind/nanobind.h>
+
 #include <dave/logger.h>
 #include <encryptor.h>
 

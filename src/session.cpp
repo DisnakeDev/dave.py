@@ -1,3 +1,5 @@
+#include <nanobind/nanobind.h>
+
 #include <mls/session.h>
 
 #include "binding_core.hpp"

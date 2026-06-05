@@ -12,6 +12,8 @@
 #include <nanobind/stl/variant.h>
 #include <nanobind/stl/vector.h>
 
+#include <dave/version.h>
+
 namespace nb = nanobind;
 
 namespace dave = discord::dave;
