@@ -34,7 +34,7 @@
 To perform a one-time build, simply run:
 
 ```sh
-pip install .
+uv pip install .
 ```
 
 You can also use any pep517-518 compatiable frontend.
@@ -43,18 +43,18 @@ For development, consider incremental builds instead;
 this avoids pip recreating a new build environment from scratch every time:
 
 ```sh
-pip install --no-build-isolation -ve .
+uv pip install --no-build-isolation -ve .
 ```
 
 To make development even more seamless, you can optionally have the extension be built automatically whenever the package is imported:
 
 ```sh
-pip install --no-build-isolation -Ceditable.rebuild=true -ve .
+uv pip install --no-build-isolation -Ceditable.rebuild=true -ve .
 ```
 
 
 ### Creating a wheel
 To create a built wheel relatively easily, e.g. for testing in another project:
 ```sh
-pip wheel .
+uv build --wheel -v
 ```
