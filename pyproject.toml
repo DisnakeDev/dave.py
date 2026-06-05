@@ -130,9 +130,6 @@ cache-keys = [
   { file = "CMakeLists.txt" },
 ]
 
-[tool.uv.config-settings]
-"editable.rebuild" = "true"
-
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
