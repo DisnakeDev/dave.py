@@ -20,7 +20,7 @@ jobs:
     name: Build SDist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           # NOTE: this should not be recursive, we really don't want to bundle vcpkg
           submodules: true
@@ -31,7 +31,7 @@ jobs:
       - name: Check metadata
         run: pipx run twine check dist/*
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-sdist
           path: dist/*.tar.gz
@@ -42,7 +42,7 @@ jobs:
     outputs:
       matrix: ${{ steps.script.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           sparse-checkout: scripts/
       - uses: actions/setup-python@v6
@@ -66,7 +66,7 @@ jobs:
         include: ${{ fromJSON(needs.generate_matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -81,11 +81,11 @@ jobs:
 
       - name: Set up QEMU
         if: runner.os == 'Linux' && matrix.arch != 'native'
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: all
 
-      - uses: pypa/cibuildwheel@v3.2
+      - uses: pypa/cibuildwheel@v3.4.1
         env:
           # choose manylinux/musllinux (they are split for the sake of ci speedup)
           CIBW_BUILD: ${{ matrix.libc == 'glibc' && '*manylinux*' || (matrix.libc == 'musl' && '*musllinux*' || '') }}
@@ -96,7 +96,7 @@ jobs:
         run: git diff --exit-code -- ":^src/**/*.pyi"
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           path: wheelhouse/*.whl
           name: dist-${{ matrix.artifact-tag }}
@@ -112,14 +112,14 @@ jobs:
       contents: write  # required for creating releases
 
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           pattern: dist-*
           merge-multiple: true
 
       - name: Create Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b  # v2.5.0
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda  # v3.0.0
         with:
           files: dist/*
           draft: true
@@ -144,12 +144,12 @@ jobs:
 
     steps:
       - uses: actions/setup-python@v6
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           pattern: dist-*
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e  # v1.13.0
+      - uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
         with:
           print-hash: true

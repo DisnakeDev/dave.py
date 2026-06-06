@@ -36,7 +36,7 @@ runs:
         echo "ref=$(git -C libdave/cpp/vcpkg rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
     - name: Restore cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ inputs.cache-dir }}
         key: vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-${{ hashFiles(format('libdave/cpp/vcpkg-alts/{0}/**', inputs.crypto)) }}
@@ -56,7 +56,7 @@ runs:
 
     - name: Restore cached vcpkg-tool binary
       if: runner.os == 'Linux'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: libdave/cpp/vcpkg/vcpkg
         key: vcpkg-tool--${{ inputs.os-arch-key }}--${{ steps.vcpkg-ref.outputs.ref }}
