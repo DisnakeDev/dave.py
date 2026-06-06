@@ -188,7 +188,7 @@ before-all = ["apk add git curl zip unzip pkgconfig nasm go ninja-build ninja-is
 [[tool.cibuildwheel.overrides]]
 select = ["*-????linux_*"]
 inherit.before-all = "append"
-before-all = ["./scripts/setup-vcpkg.sh"]
+before-all = ["./scripts/ci/setup-vcpkg.sh"]
 
 # required to build vcpkg on other platforms
 [[tool.cibuildwheel.overrides]]
