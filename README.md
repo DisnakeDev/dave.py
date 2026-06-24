@@ -24,8 +24,14 @@ Note that building from source (or sdist) also requires `$VCPKG_ROOT` to point t
 
 ## Usage
 
-This is currently primarily intended for https://github.com/DisnakeDev/disnake, though it is not targeting it in any way.  
-Due to this, there isn't really any documentation to speak of right now. Sorry about that.
+While this is not targeting/built for any project in particular, there isn't really any documentation to speak of right now. Sorry about that.  
+For implementation hints, feel free to reference [this](https://github.com/DisnakeDev/disnake/pull/1492) `disnake` PR or [this](https://github.com/discord/libdave/blob/main/samples/typescript/DaveSessionManager.ts) (partial) TypeScript reference implementation.
+
+## Versioning
+
+This project follows [semantic versioning](https://semver.org/), i.e. breaking changes will be limited to major versions (e.g. `v1.x -> v2.0`).
+
+Releases are independent and do not necessarily match upstream [libdave](https://github.com/discord/libdave) releases or [protocol](https://daveprotocol.com/#changelog) versions/changes.
 
 
 [^1]: *"Discord's audio & video end-to-end encryption"*
