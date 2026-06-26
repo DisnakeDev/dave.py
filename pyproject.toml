@@ -147,6 +147,14 @@ cmake.define = { BUILD_SHARED_LIBS = "OFF" }
 if.env.BUILD_DEBUG = true
 cmake.build-type = "Debug"
 
+[[tool.scikit-build.generate]]
+# this will also automatically be added to sdist includes
+path = "src/dave/_version.py"
+location = "source"
+template = '''
+__version__ = "${version}"
+'''
+
 
 [tool.cibuildwheel]
 skip = [

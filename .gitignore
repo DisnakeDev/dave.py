@@ -224,3 +224,7 @@ build*/
 
 # for CI
 vcpkg_cache/
+
+
+# auto-generated on build
+src/dave/_version.py

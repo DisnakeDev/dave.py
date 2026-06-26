@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dave._dave_impl import *  # pyright: ignore[reportMissingModuleSource]  # noqa: F403
+from dave._version import __version__ as __version__
 
 
 # https://daveprotocol.com/#displayable-codes
