@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased]
+
+- Update to nanobind v2.12.0, speeding up method calls by ~20%
+
 ## 0.1.2 (2026-03-09)
 
 - [windows] Link msvc runtime statically instead of dynamically, which avoids having to install a newer vcredist manually under certain circumstances
