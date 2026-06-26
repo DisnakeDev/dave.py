@@ -135,7 +135,10 @@ cache-keys = [
 minimum-version = "build-system.requires"
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
+
+sdist.exclude = ["libdave/cpp/vcpkg"]
 wheel.packages = ["src/dave"]
+
 cmake.build-type = "Release"
 cmake.define = { BUILD_SHARED_LIBS = "OFF" }
 
