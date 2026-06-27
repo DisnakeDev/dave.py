@@ -136,6 +136,9 @@ minimum-version = "build-system.requires"
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
 
+# this is supposed to be included automatically by [[tool.scikit-build.generate]],
+# but is skipped due to a bug on windows, so explicitly add it here
+sdist.include = ["src/dave/_version.py"]
 sdist.exclude = ["libdave/cpp/vcpkg"]
 wheel.packages = ["src/dave"]
 
