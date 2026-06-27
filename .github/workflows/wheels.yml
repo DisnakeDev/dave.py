@@ -11,6 +11,7 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9a-z]+"
+    branches:
 
 permissions:
   contents: read
@@ -51,7 +52,13 @@ jobs:
       - name: Run python matrix script
         id: script
         env:
-          PLATFORM_FILTER: ${{ inputs.filter }}
+          # use default (and reasonably fast) platforms if branch push, use input if workflow_dispatch
+          PLATFORM_FILTER: |-
+            ${{
+              (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/'))
+              && 'ubuntu-latest-native|windows-latest|macos-latest'
+              || inputs.filter
+            }}
         run: |
           echo "matrix=$(python ./scripts/ci/generate_os_matrix.py)" >> $GITHUB_OUTPUT
 

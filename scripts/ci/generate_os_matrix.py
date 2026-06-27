@@ -1,4 +1,5 @@
 import json
+import re
 from os import getenv
 
 single = ["macos-15-intel", "macos-latest", "windows-latest", "windows-11-arm"]
@@ -33,8 +34,6 @@ for m in matrix:
 # optionally filter only requested platforms
 
 if plat_filter := getenv("PLATFORM_FILTER"):
-    import re
-
     matrix = [m for m in matrix if re.search(plat_filter, m["artifact-tag"])]
 
 print(json.dumps(matrix))
