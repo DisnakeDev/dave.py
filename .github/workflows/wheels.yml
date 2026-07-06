@@ -57,7 +57,7 @@ jobs:
           PLATFORM_FILTER: |-
             ${{
               (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/'))
-              && 'ubuntu-latest-native-glibc|windows-latest|macos-latest'
+              && 'ubuntu-latest-native-glibc|windows-latest|macos-26$'
               || inputs.filter
             }}
         run: |

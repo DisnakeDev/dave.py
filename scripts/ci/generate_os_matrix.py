@@ -2,7 +2,7 @@ import json
 import re
 from os import getenv
 
-single = ["macos-15-intel", "macos-latest", "windows-latest", "windows-11-arm"]
+single = ["macos-26-intel", "macos-26", "windows-latest", "windows-11-arm"]
 ubuntu_archs = {
     "ubuntu-latest": ["native", "ppc64le", "s390x", "riscv64"],
     "ubuntu-24.04-arm": ["native"],
