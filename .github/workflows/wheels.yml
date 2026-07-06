@@ -93,7 +93,7 @@ jobs:
         with:
           platforms: all
 
-      - uses: pypa/cibuildwheel@v3.4.1
+      - uses: pypa/cibuildwheel@v4.1.0
         env:
           # choose manylinux/musllinux (they are split for the sake of ci speedup)
           CIBW_BUILD: ${{ matrix.libc == 'glibc' && '*manylinux*' || (matrix.libc == 'musl' && '*musllinux*' || '') }}
