@@ -2,7 +2,7 @@
 
 ## [unreleased]
 
-- Update to nanobind v2.12.0, speeding up method calls by ~20%
+- Update to nanobind v2.13.0, speeding up method calls by ~20-50%
 - Add `dave.__version__` attribute
 
 ## 0.1.2 (2026-03-09)
