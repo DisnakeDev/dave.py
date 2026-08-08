@@ -4,7 +4,7 @@
 
 - Support Python 3.15
 - Add `dave.__version__` attribute
-- Update to nanobind v2.13.0, speeding up method calls by ~20-50%
+- Update to nanobind v2.14.0, speeding up method calls by ~20-50%
 
 ## 0.1.2 (2026-03-09)
 
