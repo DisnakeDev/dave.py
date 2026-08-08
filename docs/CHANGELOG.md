@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## 0.2.0 (2026-08-08)
 
 - Support Python 3.15
 - Add `dave.__version__` attribute
