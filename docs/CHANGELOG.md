@@ -2,22 +2,32 @@
 
 ## [unreleased]
 
+#### Breaking changes
 - Drop support for Python 3.9
+
 
 ## 0.2.0 (2026-08-08)
 
+#### Features
 - Support Python 3.15
 - Add `dave.__version__` attribute
+
+#### Miscellaneous
 - Update to nanobind v2.14.0, speeding up method calls by ~20-50%
+
 
 ## 0.1.2 (2026-03-09)
 
+#### Bugfixes
 - [windows] Link msvc runtime statically instead of dynamically, which avoids having to install a newer vcredist manually under certain circumstances
+
 
 ## 0.1.1 (2026-02-19)
 
+#### Bugfixes
 - Emit `LS_INFO` logs from libdave as `logging.DEBUG` logs instead, due to their verbosity
 - Change logger name to `dave`
+
 
 ## 0.1.0 (2026-02-16)
 
