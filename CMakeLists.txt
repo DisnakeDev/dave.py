@@ -13,7 +13,7 @@ if (NOT SKBUILD)
    $ pip install .
   =====================================================================
   If you are a software developer contributing to this package,
-  follow the instructions in the README instead to set up a more
+  follow the instructions in docs/CONTRIBUTING.md instead to set up a more
   developer-friendly build environment.")
 endif()
 
