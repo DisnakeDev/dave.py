@@ -2,7 +2,7 @@
 
 [project]
 name = "dave.py"
-version = "0.2.0"
+version = "1.0.0"
 description = "Python bindings for libdave, Discord's audio & video end-to-end encryption"
 readme = "README.md"
 requires-python = ">=3.10"

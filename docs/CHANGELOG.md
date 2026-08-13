@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## 1.0.0 (2026-08-13)
 
 #### Breaking changes
 - Drop support for Python 3.9
