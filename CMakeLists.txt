@@ -65,8 +65,11 @@ if (NOT EXISTS ${_VCPKG_TOOLCHAIN})
     else()
         message(FATAL_ERROR "\
         vcpkg toolchain not found.
-        If you're installing from PyPI, clone https://github.com/microsoft/vcpkg
-        and set the $VCPKG_ROOT environment variable to that location.
+        If you're installing from PyPI, you might be using an unsupported Python version;
+        consider opening an issue at https://github.com/DisnakeDev/dave.py/issues.
+        If you're sure you want to build this package from source, clone
+        https://github.com/microsoft/vcpkg and set the $VCPKG_ROOT environment
+        variable to that location.
         (If you are a developer contributing to this package, ensure that
         all submodules are initialized instead).
         ")
