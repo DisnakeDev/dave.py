@@ -1,5 +1,10 @@
 # Changelog
 
+## [unreleased]
+
+#### Bugfixes
+- Handle potential errors in `Session.get_pairwise_fingerprint` caused by the event loop being closed
+
 ## 1.0.0 (2026-08-13)
 
 #### Breaking changes

@@ -1,5 +1,6 @@
 #include <nanobind/nanobind.h>
 
+#include <dave/logger.h>
 #include <mls/session.h>
 
 #include "binding_core.hpp"
@@ -124,11 +125,21 @@ void bindSession(nb::module_& m) {
                     userId,
                     [fut = gil_object_wrapper(fut)](std::vector<uint8_t> const& result) {
                         nb::gil_scoped_acquire acquire;
-                        auto call_soon_threadsafe =
-                            fut->attr("get_loop")().attr("call_soon_threadsafe");
-                        call_soon_threadsafe(
-                            fut->attr("set_result"), nb::vector_to_bytes_opt(std::move(result))
-                        );
+                        try {
+                            auto call_soon_threadsafe =
+                                fut->attr("get_loop")().attr("call_soon_threadsafe");
+                            call_soon_threadsafe(
+                                fut->attr("set_result"), nb::vector_to_bytes_opt(std::move(result))
+                            );
+                        } catch (const std::exception& e) {
+                            // call_soon_threadsafe can (technically) raise if the loop is
+                            // closed for some reason.
+                            // this *probably* never happens, but I'd still rather do this than
+                            // have it std::terminate() the entire process
+                            DISCORD_LOG(LS_ERROR)
+                                << "Failed to handle pairwise fingerprint (loop may be closed?): "
+                                << e.what();
+                        }
                     }
                 );
                 return fut;
