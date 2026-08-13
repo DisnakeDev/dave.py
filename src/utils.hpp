@@ -10,6 +10,11 @@ inline nb::bytes vector_to_bytes(const std::vector<uint8_t>& vec) {
     return nb::bytes(vec.data(), vec.size());
 }
 
+inline std::optional<nb::bytes> vector_to_bytes_opt(const std::vector<uint8_t>& vec) {
+    if (vec.empty()) return std::nullopt;
+    return vector_to_bytes(std::move(vec));
+}
+
 inline std::vector<uint8_t> bytes_to_vector(nb::bytes bytes) {
     const auto* ptr = static_cast<const uint8_t*>(bytes.data());
     return {ptr, ptr + bytes.size()};

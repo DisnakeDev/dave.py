@@ -62,7 +62,7 @@ void bindSession(nb::module_& m) {
         .def(
             "get_last_epoch_authenticator",
             [](const dave::mls::Session& self) {
-                return nb::vector_to_bytes(self.GetLastEpochAuthenticator());
+                return nb::vector_to_bytes_opt(self.GetLastEpochAuthenticator());
             }
         )
         .def(
@@ -105,7 +105,7 @@ void bindSession(nb::module_& m) {
         .def(
             "get_marshalled_key_package",
             [](dave::mls::Session& self) {
-                return nb::vector_to_bytes(self.GetMarshalledKeyPackage());
+                return nb::vector_to_bytes_opt(self.GetMarshalledKeyPackage());
             }
         )
         .def(
@@ -127,7 +127,7 @@ void bindSession(nb::module_& m) {
                         auto call_soon_threadsafe =
                             fut->attr("get_loop")().attr("call_soon_threadsafe");
                         call_soon_threadsafe(
-                            fut->attr("set_result"), nb::vector_to_bytes(std::move(result))
+                            fut->attr("set_result"), nb::vector_to_bytes_opt(std::move(result))
                         );
                     }
                 );
@@ -137,7 +137,7 @@ void bindSession(nb::module_& m) {
             nb::arg("user_id"),
             nb::sig(
                 "def get_pairwise_fingerprint(self, version: int, user_id: str) -> "
-                "asyncio.Future[bytes]"
+                "asyncio.Future[bytes | None]"
             )
         )
         .def("has_established_group", &dave::mls::Session::HasEstablishedGroupState);

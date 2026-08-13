@@ -4,6 +4,10 @@
 
 #### Breaking changes
 - Drop support for Python 3.9
+- Methods that previously returned an empty bytes object (`b''`) on failure now return `None` in such cases. This applies to:
+    - `Session.get_last_epoch_authenticator() -> bytes | None`
+    - `Session.get_marshalled_key_package() -> bytes | None`
+    - `Session.get_pairwise_fingerprint() -> asyncio.Future[bytes | None]`
 
 
 ## 0.2.0 (2026-08-08)
