@@ -49,8 +49,10 @@ struct gil_object_wrapper {
 
     ~gil_object_wrapper() {
         if (o.is_valid()) {
-            nb::gil_scoped_acquire acquire;
-            o.reset();
+            nb::gil_scoped_acquire guard;
+            if (guard.is_valid()) {
+                o.reset();
+            }
         }
     }
 

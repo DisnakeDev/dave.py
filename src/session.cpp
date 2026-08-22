@@ -128,7 +128,9 @@ void bindSession(nb::module_& m) {
                     version,
                     userId,
                     [fut = gil_object_wrapper(fut)](std::vector<uint8_t> const& result) {
-                        nb::gil_scoped_acquire acquire;
+                        nb::gil_scoped_acquire guard;
+                        if (!guard.is_valid()) return;
+
                         try {
                             auto call_soon_threadsafe =
                                 fut->attr("get_loop")().attr("call_soon_threadsafe");
