@@ -39,7 +39,7 @@ dev = [
 ]
 # note: these should match `build-system.requires`
 build = [
-  "nanobind~=2.14.0",
+  "nanobind~=3.0.0",
   "scikit-build-core>=1.0.0"
 ]
 nox = [
@@ -58,7 +58,7 @@ typing = [
 ]
 
 [build-system]
-requires = ["nanobind~=2.14.0", "scikit-build-core>=1.0.0"]
+requires = ["nanobind~=3.0.0", "scikit-build-core>=1.0.0"]
 build-backend = "scikit_build_core.build"
 
 [tool.poe.tasks]

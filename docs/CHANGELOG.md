@@ -6,6 +6,9 @@
 - Handle potential errors in `Session.get_pairwise_fingerprint` caused by the returned future being canceled or the event loop being closed
 - Use `asyncio.get_event_loop().create_future()` instead of `asyncio.Future()` in `Session.get_pairwise_fingerprint()`
 
+#### Miscellaneous
+- Update to nanobind v3.0.0
+
 
 ## 1.0.0 (2026-08-13)
 
