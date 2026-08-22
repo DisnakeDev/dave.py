@@ -28,7 +28,8 @@ int map_logging_level(discord::dave::LoggingSeverity sev) {
 void log_sink(
     discord::dave::LoggingSeverity severity, const char* file, int line, const std::string& message
 ) {
-    nb::gil_scoped_acquire acquire;
+    nb::gil_scoped_acquire guard;
+    if (!guard.is_valid()) return;
 
     // get logger instance
     auto logging = nb::module_::import_("logging");
