@@ -89,6 +89,7 @@ void bindSession(nb::module_& m) {
             "process_commit",
             [](dave::mls::Session& self,
                nb::bytes commit) -> std::variant<RejectType, dave::RosterMap> {
+                // FIXME(2.0): should return dict[int, bytes] instead of dict[int, list[int]]
                 return unwrapRejection(self.ProcessCommit(nb::bytes_to_vector(commit)));
             },
             nb::arg("commit")
@@ -98,6 +99,7 @@ void bindSession(nb::module_& m) {
             [](dave::mls::Session& self,
                nb::bytes welcome,
                std::set<std::string> const& recognizedUserIDs) {
+                // FIXME(2.0): should return dict[int, bytes] instead of dict[int, list[int]]
                 return self.ProcessWelcome(nb::bytes_to_vector(welcome), recognizedUserIDs);
             },
             nb::arg("welcome"),
@@ -112,6 +114,7 @@ void bindSession(nb::module_& m) {
         .def(
             "get_key_ratchet",
             &dave::mls::Session::GetKeyRatchet,
+            // FIXME(2.0): int instead of str (both, perhaps?), same for recognized_user_ids
             nb::arg("user_id"),
             // explicit signature as this can return a nullptr
             nb::sig("def get_key_ratchet(self, user_id: str) -> IKeyRatchet | None")
@@ -145,6 +148,7 @@ void bindSession(nb::module_& m) {
                 return fut;
             },
             nb::arg("version"),
+            // FIXME(2.0): int instead of str
             nb::arg("user_id"),
             nb::sig(
                 "def get_pairwise_fingerprint(self, version: int, user_id: str) -> "
