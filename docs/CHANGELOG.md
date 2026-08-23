@@ -4,6 +4,8 @@
 
 #### Bugfixes
 - Handle potential errors in `Session.get_pairwise_fingerprint` caused by the event loop being closed
+- Use `asyncio.get_event_loop().create_future()` instead of `asyncio.Future()` in `Session.get_pairwise_fingerprint()`
+
 
 ## 1.0.0 (2026-08-13)
 

@@ -122,7 +122,8 @@ void bindSession(nb::module_& m) {
         .def(
             "get_pairwise_fingerprint",
             [](const dave::mls::Session& self, uint16_t version, std::string const& userId) {
-                auto fut = nb::module_::import_("asyncio").attr("Future")();
+                auto loop = nb::module_::import_("asyncio").attr("get_event_loop")();
+                auto fut = loop.attr("create_future")();
                 self.GetPairwiseFingerprint(
                     version,
                     userId,
