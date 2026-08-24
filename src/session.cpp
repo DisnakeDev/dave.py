@@ -132,9 +132,14 @@ void bindSession(nb::module_& m) {
                         try {
                             auto call_soon_threadsafe =
                                 fut->attr("get_loop")().attr("call_soon_threadsafe");
-                            call_soon_threadsafe(
-                                fut->attr("set_result"), nb::vector_to_bytes_opt(std::move(result))
-                            );
+
+                            // call set_result only if future is not canceled
+                            // FIXME: this will not be thread-safe in free-threaded builds
+                            if (!fut->attr("done")())
+                                call_soon_threadsafe(
+                                    fut->attr("set_result"),
+                                    nb::vector_to_bytes_opt(std::move(result))
+                                );
                         } catch (const std::exception& e) {
                             // call_soon_threadsafe can (technically) raise if the loop is
                             // closed for some reason.
