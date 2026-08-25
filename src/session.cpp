@@ -134,8 +134,8 @@ void bindSession(nb::module_& m) {
                                 fut->attr("get_loop")().attr("call_soon_threadsafe");
 
                             // call set_result only if future is not canceled
-                            // FIXME: this will not be thread-safe in free-threaded builds
-                            if (!fut->attr("done")())
+                            // NOTE: this will not be thread-safe in free-threaded builds
+                            if (!nb::cast<bool>(fut->attr("done")()))
                                 call_soon_threadsafe(
                                     fut->attr("set_result"),
                                     nb::vector_to_bytes_opt(std::move(result))
