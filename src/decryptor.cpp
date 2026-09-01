@@ -21,13 +21,23 @@ void bindDecryptor(nb::module_& m) {
             "transition_to_key_ratchet",
             &dave::Decryptor::TransitionToKeyRatchet,
             nb::arg("key_ratchet"),
-            nb::arg("transition_expiry") = dave::kDefaultTransitionDuration
+            nb::arg("transition_expiry") = dave::kDefaultTransitionDuration,
+            // explicit signature to include implicit float conversion
+            nb::sig(
+                "def transition_to_key_ratchet(self, key_ratchet: IKeyRatchet,"
+                " transition_expiry: datetime.timedelta | float = ...) -> None"
+            )
         )
         .def(
             "transition_to_passthrough_mode",
             &dave::Decryptor::TransitionToPassthroughMode,
             nb::arg("passthrough_mode"),
-            nb::arg("transition_expiry") = dave::kDefaultTransitionDuration
+            nb::arg("transition_expiry") = dave::kDefaultTransitionDuration,
+            // explicit signature to include implicit float conversion
+            nb::sig(
+                "def transition_to_passthrough_mode(self, passthrough_mode: bool,"
+                " transition_expiry: datetime.timedelta | float = ...) -> None"
+            )
         )
         .def(
             "decrypt",
