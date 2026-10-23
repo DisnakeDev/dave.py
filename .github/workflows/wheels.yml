@@ -22,7 +22,7 @@ jobs:
     name: Build SDist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           # NOTE: this should not be recursive, we really don't want to bundle vcpkg
           submodules: true
@@ -44,10 +44,10 @@ jobs:
     outputs:
       matrix: ${{ steps.script.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           sparse-checkout: scripts/
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Run python matrix script
@@ -74,7 +74,7 @@ jobs:
         include: ${{ fromJSON(needs.generate_matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -93,7 +93,7 @@ jobs:
         with:
           platforms: all
 
-      - uses: pypa/cibuildwheel@v4.2.0
+      - uses: pypa/cibuildwheel@v4.3.4
         env:
           # choose manylinux/musllinux (they are split for the sake of ci speedup)
           CIBW_BUILD: ${{ matrix.libc == 'glibc' && '*manylinux*' || (matrix.libc == 'musl' && '*musllinux*' || '') }}
@@ -127,7 +127,7 @@ jobs:
           merge-multiple: true
 
       - name: Create Release
-        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda  # v3.0.0
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
         with:
           files: dist/*
           draft: true
@@ -151,13 +151,13 @@ jobs:
       id-token: write  # this permission is mandatory for trusted publishing
 
     steps:
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
       - uses: actions/download-artifact@v8
         with:
           path: dist
           pattern: dist-*
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
         with:
           print-hash: true
