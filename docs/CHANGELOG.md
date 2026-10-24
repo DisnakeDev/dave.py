@@ -4,13 +4,7 @@
 
 #### Features
 - Update internal libdave to [v1.2.2](https://github.com/discord/libdave/releases/tag/v1.2.2%2Fcpp).
-    - Changes:
-        - MLS Welcome verification rejects unrecognized user IDs and incorrect group ID
-    - Notable fixes:
-        - Late-arriving stream-start packets are processed correctly even if first received nonce is newer
-        - The previous ratchets' expiry in a decryptor is no longer reset when transitioning to new ratchet
-        - Repeated transition to the same (non-expired) ratchet in a decryptor is now ignored
-        - Repeated usage of the same ratchet in an encryptor no longer resets nonce sequence
+  This notably adds further validation to MLS Welcome messages, which now reject an incorrect group ID or unrecognized user IDs, and includes several other bugfixes.
 
 #### Bugfixes
 - Handle potential errors in `Session.get_pairwise_fingerprint` caused by the returned future being canceled or the event loop being closed
