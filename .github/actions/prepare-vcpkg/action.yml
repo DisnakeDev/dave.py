@@ -39,7 +39,7 @@ runs:
       uses: actions/cache@v6
       with:
         path: ${{ inputs.cache-dir }}
-        key: vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-${{ hashFiles(format('libdave/cpp/vcpkg-alts/**', inputs.crypto)) }}
+        key: vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-${{ hashFiles('libdave/cpp/vcpkg-alts/**') }}
         restore-keys: |
           vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-${{ steps.vcpkg-ref.outputs.ref }}-
           vcpkg-deps--${{ inputs.os-arch-key }}--${{ inputs.crypto }}-
