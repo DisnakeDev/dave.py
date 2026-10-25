@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## 1.1.0 (2026-10-25)
 
 #### Features
 - Update internal libdave to [v1.2.2](https://github.com/discord/libdave/releases/tag/v1.2.2%2Fcpp).
